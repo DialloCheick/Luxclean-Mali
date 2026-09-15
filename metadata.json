@@ -1,0 +1,8 @@
+{
+  "name": "Lux Clean Mali",
+  "description": "Service premium de nettoyage professionnel de tapis, moquettes (bureaux, mosquées, résidences) et canapés à Bamako avec devis en ligne et réservation rapide WhatsApp.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

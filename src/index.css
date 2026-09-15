@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-display: 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-luxury: 'Cinzel', serif;
+
+  /* Sober, premium brushed gold sampled directly from the Luxclean Mali logo */
+  --color-gold-logo: #C5A869;
+  --color-gold-light: #DFC792;
+  --color-gold-soft: #F2E5CC;
+  --color-gold-deep: #A08242;
+  --color-gold-dark: #7A602B;
+
+  /* Midnight Navy of the brand background */
+  --color-navy-deep: #060B16;
+  --color-navy-card: #091325;
+  --color-navy-surface: #0D1B32;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #060B16;
+  color: #f1f5f9;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display);
+}
+
+.font-luxury {
+  font-family: var(--font-luxury);
+}
+
+/* SOBER & PREMIUM LOGO GOLD UTILITIES */
+.text-gold-logo {
+  color: #C5A869;
+}
+
+.text-gold-light {
+  color: #DFC792;
+}
+
+/* Brushed Champagne & Antique Gold Gradient from Logo */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #FBF6EC 0%, #DFC792 35%, #C5A869 70%, #9B7D3B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gold-bright {
+  background: linear-gradient(135deg, #FFFFFF 0%, #E8D7B5 45%, #C5A869 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Premium Sober Gold Button & Card Gradients (No neon yellow or orange) */
+.bg-gold-gradient {
+  background: linear-gradient(135deg, #D4BA7E 0%, #C5A869 50%, #B08F4C 100%);
+  color: #060B16;
+}
+
+.bg-gold-gradient:hover {
+  background: linear-gradient(135deg, #DEC58B 0%, #CFB273 50%, #B89650 100%);
+}
+
+.bg-gold-subtle {
+  background-color: rgba(197, 168, 105, 0.12);
+}
+
+.border-gold-subtle {
+  border-color: rgba(197, 168, 105, 0.25);
+}
+
+.border-gold-medium {
+  border-color: rgba(197, 168, 105, 0.45);
+}
+
+.shadow-gold-subtle {
+  box-shadow: 0 8px 25px rgba(197, 168, 105, 0.15);
+}
+
+/* Luxury custom scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #060B16;
+}
+::-webkit-scrollbar-thumb {
+  background: #1B2945;
+  border-radius: 9999px;
+  border: 1px solid rgba(197, 168, 105, 0.25);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C5A869;
+}

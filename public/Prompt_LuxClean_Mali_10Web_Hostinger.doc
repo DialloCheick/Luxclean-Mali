@@ -1,0 +1,233 @@
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+  <meta charset="utf-8">
+  <title>Prompt IA - LUXCLEAN MALI pour 10Web et Hostinger</title>
+  <style>
+    body {
+      font-family: Calibri, 'Segoe UI', Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.6;
+      color: #1e293b;
+      margin: 40px;
+    }
+    h1 {
+      font-size: 20pt;
+      color: #0f172a;
+      border-bottom: 2px solid #0284c7;
+      padding-bottom: 8px;
+      margin-top: 0;
+    }
+    h2 {
+      font-size: 14pt;
+      color: #0369a1;
+      margin-top: 24px;
+      border-left: 4px solid #f59e0b;
+      padding-left: 10px;
+    }
+    h3 {
+      font-size: 12pt;
+      color: #0f172a;
+      margin-top: 16px;
+    }
+    .badge {
+      background-color: #fef3c7;
+      color: #b45309;
+      font-weight: bold;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 9pt;
+      display: inline-block;
+    }
+    .box {
+      background-color: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 16px;
+      margin: 16px 0;
+    }
+    .prompt-box {
+      background-color: #0f172a;
+      color: #f8fafc;
+      border-left: 6px solid #06b6d4;
+      padding: 18px;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 10pt;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      border-radius: 4px;
+    }
+    ul, ol {
+      margin-left: 20px;
+    }
+    li {
+      margin-bottom: 6px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+    }
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 8px 12px;
+      text-align: left;
+      font-size: 10pt;
+    }
+    th {
+      background-color: #f1f5f9;
+      color: #0f172a;
+    }
+    .contact-line {
+      font-weight: bold;
+      color: #0284c7;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>PROMPT IA OFFICIEL & CAHIER DES CHARGES : LUXCLEAN MALI</h1>
+  <p><strong>Destiné aux créateurs de sites IA :</strong> 10Web.io (WordPress & Elementor AI Builder), Hostinger AI Website Builder, Wix Studio AI, ou Framer AI.</p>
+  
+  <div class="box">
+    <strong>Entreprise :</strong> LUXCLEAN MALI<br>
+    <strong>Slogan officiel :</strong> « Votre confort, notre signature. »<br>
+    <strong>Secteur :</strong> Nettoyage professionnel haute pression & désinfection textile (Tapis, Moquettes, Canapés, Matelas, Auto)<br>
+    <strong>Localisation :</strong> Bamako, Mali (Hamdallaye ACI 2000, Badalabougou, Cité du Niger, Sotuba, etc.)<br>
+    <strong>Téléphone & WhatsApp Business :</strong> +223 75 53 93 61<br>
+    <strong>Réseau social phare :</strong> TikTok @luxcleanmali223
+  </div>
+
+  <h2>1. COMMENT UTILISER CE PROMPT</h2>
+  <ol>
+    <li>Dans <strong>10Web.io</strong> : Créez un nouveau site &gt; Choisissez « Generate with AI » &gt; Sélectionnez la catégorie <em>Cleaning Services / Nettoyage</em> &gt; Copiez-collez le prompt ci-dessous dans la case « Describe your business ».</li>
+    <li>Dans <strong>Hostinger AI Builder</strong> : Rendez-vous sur le panneau Hostinger &gt; Créer un site avec l'IA &gt; Entrez le Nom de marque <strong>LUXCLEAN MALI</strong> et collez le prompt dans la description.</li>
+    <li>Une fois la génération terminée, remplacez les images d'illustration par vos propres vidéos et photos de TikTok (@luxcleanmali223) et votre logo officiel.</li>
+  </ol>
+
+  <h2>2. PROMPT COMPLET À COPIER-COLLER DANS L'IA</h2>
+  <div class="prompt-box">
+Crée un site web professionnel, prestigieux, moderne et 100% responsive optimisé pour smartphones pour mon entreprise "LUXCLEAN MALI", basée à Bamako au Mali. 
+Slogan officiel : "Votre confort, notre signature."
+Numéro officiel d'appel et WhatsApp Business : +223 75 53 93 61.
+Profil TikTok : @luxcleanmali223.
+
+1. IDENTITÉ VISUELLE & STYLE :
+- Style : Moderne, luxueux, hygiénique, rassurant et haut de gamme.
+- Palette de couleurs : Fond bleu nuit profond (#0f172a et #020617) avec des touches cyan purifiant (#06b6d4) et des dorures prestigieuses (#f59e0b) en accord avec notre logo officiel doré.
+- Typographie : Élégante, très lisible sur smartphone (sans-serif moderne, style Outfit / Montserrat).
+- Univers visuel : Mettre en avant nos machines professionnelles d'injection-extraction haute puissance à buse transparente montrant l'évacuation de l'eau sale incrustée et l'élimination de la poussière rouge (latérite) typique de Bamako.
+
+2. STRUCTURE DU SITE ET SECTIONS REQUISES :
+
+A. EN-TÊTE / NAVBAR :
+- Logo officiel avec mention "LUXCLEAN MALI - Votre confort, notre signature".
+- Liens de navigation : Accueil, Prestations, Avant/Après, Devis en ligne, Tarifs & Paiement, Avis, Contact.
+- Bouton d'action proéminent : "Devis Gratuit" et bouton vert "WhatsApp Direct : +223 75 53 93 61".
+
+B. HERO SECTION (ACCUEIL) :
+- Titre percutant : "Redonnez à vos Tapis, Moquettes & Canapés l'éclat et la pureté du neuf."
+- Sous-titre : "Spécialiste du nettoyage industriel haute pression à Bamako pour les résidences privées, les bureaux d'entreprises et les moquettes de mosquées. Élimination radicale de la poussière, des acariens et des taches rebelles avec séchage express."
+- Boutons d'action (CTA) : "Calculer mon devis gratuit" (redirection vers calculateur) et "Réserver sur WhatsApp (+223 75 53 93 61)".
+- Badges de confiance : "4 800+ clients satisfaits à Bamako", "Intervention 7j/7", "Produits écologiques sains pour la famille", "Vu sur TikTok @luxcleanmali223".
+
+C. CATALOGUE DE SERVICES PHARE (AVEC PRIX EN FRANCS CFA) :
+1. Tapis & Carpettes de Maison : Dépoussiérage vibrant, brossage moussant et extraction en profondeur. Lavage à domicile ou en atelier avec collecte et livraison offerte sous 24h/48h. (À partir de 5 000 FCFA).
+2. Moquettes de Mosquées (Spécial Prières) : Nettoyage grand format, désinfection antibactérienne complète, élimination des odeurs et parfumage traditionnel signature au musc doux et oud. Interventions de nuit ou entre les prières. (À partir de 700 FCFA / m²).
+3. Moquettes de Bureaux & Sièges d'Entreprises : Rénovation d'open-spaces, salles de réunion et sièges ergonomiques. Planification de nuit ou le week-end sans interruption d'activité. (À partir de 800 FCFA / m²).
+4. Canapés, Fauteuils & Salons Complets : Traitement de tous revêtements (velours, tissu, lin, alcantara, cuir). Détachage des graisses, thé, boissons et auréoles. (À partir de 5 000 FCFA le fauteuil, 18 000 FCFA canapé 3 places, 28 000 FCFA salon 5 places).
+5. Matelas & Sommiers : Désinfection anti-acariens, élimination des allergènes et auréoles de transpiration. (À partir de 8 000 FCFA).
+6. Intérieur Véhicules & 4x4 : Shampouinage complet des sièges en tissu/velours et tapis de sol de voiture. (À partir de 15 000 FCFA).
+
+D. GALERIE VISUELLE INTERACTIVE AVANT / APRÈS :
+- Présentation comparative montrant le contraste spectaculaire entre l'état sale/poussiéreux et le résultat immaculé après extraction.
+- Exemples réels : Canapé en velours beige à l'ACI 2000, Grand tapis persan de salon, Moquette de mosquée à Badalabougou, Intérieur de salon familial.
+
+E. VITRINE TIKTOK VIRALE (@luxcleanmali223) :
+- Section dédiée aux vidéos TikTok montrant la puissance de nos machines et la satisfaction du nettoyage en direct. Lien direct cliquable vers notre compte officiel TikTok.
+
+F. SYSTÈME DE DEVIS EN LIGNE INTERACTIF EN FCFA :
+- Formulaire permettant au client de sélectionner ses articles (nombre de tapis, m² de moquette, type de canapé).
+- Options supplémentaires à cocher : Traitement antibactérien (+2 000 FCFA), Détachage intensif (+2 500 FCFA), Parfumage signature Musc/Oud (+1 500 FCFA), Séchage express (+2 000 FCFA).
+- Choix du quartier à Bamako : ACI 2000, Badalabougou, Golf, Sotuba, Titibougou, Kalaban, Sébénikoro, Hippodrome, etc. Déplacement offert dès 15 000 FCFA.
+- Affichage du Total Estimé en direct en FCFA.
+- Bouton final : "Envoyer ce devis sur WhatsApp (+223 75 53 93 61)" pour confirmation instantanée.
+
+G. MODES DE PAIEMENT LOCAUX AU MALI :
+- Intégrer les logos et instructions pour :
+  * Orange Money Mali (Transfert direct ou code marchand au +223 75 53 93 61)
+  * Wave Mali (Paiement sans frais au +223 75 53 93 61 ou scan QR code)
+  * Moov Money (Malitel au +223 66 12 34 56)
+  * Règlement en Espèces en main propre au technicien après vérification du résultat.
+
+H. TÉMOIGNAGES CLIENTS DE BAMAKO :
+- Avis authentiques de résidents de Bamako (ex: Famille Traoré à l'ACI 2000, Comité de Mosquée à Badalabougou, Directeur de Cabinet d'Audit à la Cité du Niger).
+- Note moyenne : 4.9/5 étoiles.
+
+I. FOIRE AUX QUESTIONS (FAQ) :
+- Temps de séchage : 2 à 4h grâce à la haute puissance d'aspiration, 24-48h pour les tapis emportés en atelier.
+- Sécurité des produits : Shampoings écologiques biodégradables, sans solvants toxiques, sûrs pour enfants et asthmatiques.
+- Mosquées : Interventions adaptées aux horaires de prière avec parfumage musc offert.
+- Déplacement : Partout à Bamako, Rive Gauche et Rive Droite.
+
+J. BARRE FIXE SMARTPHONE EN BAS D'ÉCRAN (MOBILE BOTTOM BAR) :
+- Pour une utilisation fluide sur téléphone : barre flottante avec 4 boutons d'action rapide :
+  1. "Appeler" (tel:+22375539361)
+  2. "Devis" (vers le calculateur)
+  3. "RDV" (vers la prise de rendez-vous)
+  4. "WhatsApp" (chat direct en un clic).
+  </div>
+
+  <h2>3. INFORMATIONS COMPLÉMENTAIRES POUR CONFIGURER VOTRE SITE</h2>
+  <table>
+    <tr>
+      <th>Paramètre</th>
+      <th>Valeur officielle</th>
+    </tr>
+    <tr>
+      <td><strong>Nom de l'entreprise</strong></td>
+      <td>LUXCLEAN MALI</td>
+    </tr>
+    <tr>
+      <td><strong>Slogan</strong></td>
+      <td>Votre confort, notre signature.</td>
+    </tr>
+    <tr>
+      <td><strong>Téléphone principal</strong></td>
+      <td>+223 75 53 93 61</td>
+    </tr>
+    <tr>
+      <td><strong>Ligne secondaire</strong></td>
+      <td>+223 66 12 34 56</td>
+    </tr>
+    <tr>
+      <td><strong>WhatsApp Business</strong></td>
+      <td>+223 75 53 93 61</td>
+    </tr>
+    <tr>
+      <td><strong>TikTok officiel</strong></td>
+      <td>@luxcleanmali223 (https://www.tiktok.com/@luxcleanmali223?)</td>
+    </tr>
+    <tr>
+      <td><strong>Adresse physique</strong></td>
+      <td>Hamdallaye ACI 2000, Près du Monument de l'Obélisque, Bamako - Mali</td>
+    </tr>
+    <tr>
+      <td><strong>Horaires d'ouverture</strong></td>
+      <td>7j/7 de 07h30 à 20h30 (Interventions de nuit possibles)</td>
+    </tr>
+    <tr>
+      <td><strong>Devise monétaire</strong></td>
+      <td>FCFA (Francs CFA BCEAO)</td>
+    </tr>
+    <tr>
+      <td><strong>Moyens de paiement</strong></td>
+      <td>Orange Money (+223 75 53 93 61), Wave Mali (+223 75 53 93 61), Moov Money, Espèces</td>
+    </tr>
+  </table>
+
+  <p style="margin-top: 30px; font-size: 10pt; color: #64748b; text-align: center;">
+    Document généré pour LUXCLEAN MALI • Bamako, Mali • Tous droits réservés.
+  </p>
+
+</body>
+</html>

@@ -14,8 +14,7 @@
  * =========================================================================
  */
 
-import heroMainImg from '../assets/images/regenerated_image_1789493331862.png';
-import carInteriorImg from '../assets/images/regenerated_image_1789495549036.png';
+import heroMainImg from '../assets/images/regenerated_image_1789578624366.png';
 
 export interface ImageConfigItem {
   id: string;
@@ -49,54 +48,293 @@ export const SITE_IMAGES = {
     tapis: {
       id: 'ba-2',
       title: 'Grand Tapis de salon oriental',
-      before: 'https://images.unsplash.com/photo-1600121848594-d8644e57abab?auto=format&fit=crop&w=800&q=80',
-      after: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
+      before: '/tapis-before.jpg',
+      after: '/tapis-after.jpg',
     },
     moquetteMosquee: {
       id: 'ba-3',
       title: 'Moquette de salle de prière mosquée',
-      before: 'https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=800&q=80',
-      after: 'https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=800&q=80',
+      before: '/mosquee-before.jpg',
+      after: '/mosquee-after.jpg',
     },
     moquetteBureau: {
       id: 'ba-4',
       title: 'Moquette de bureaux de direction',
-      before: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80',
-      after: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80',
+      before: '/bureau-before.jpg',
+      after: '/bureau-after.jpg',
     },
   },
 
   // 4. Catalogue des Prestations & Services
   services: {
-    tapisMaison: 'https://images.unsplash.com/photo-1600121848594-d8644e57abab?auto=format&fit=crop&w=900&q=80',
-    moquetteMosquee: 'https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=900&q=80',
-    moquetteBureau: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=900&q=80',
+    tapisMaison: '/tapis-after.jpg',
+    moquetteMosquee: '/mosquee-after.jpg',
+    moquetteBureau: '/bureau-after.jpg',
     canapesSalons: '/sofa-after-clean.jpg',
-    matelasLiterie: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80',
-    interieurAuto: carInteriorImg,
+    matelasLiterie: '/matelas-clean.jpg',
+    interieurAuto: '/interieur-auto.png',
   },
 
   // 5. Vidéos & Réalisations TikTok (@luxcleanmali223)
   tiktok: {
-    video1: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80',
-    video2: 'https://images.unsplash.com/photo-1600121848594-d8644e57abab?auto=format&fit=crop&w=600&q=80',
-    video3: 'https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=600&q=80',
-    video4: 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=600&q=80',
+    video1: '/tiktok-video-thumbnail.jpg',
+    video2: '/tiktok-video-thumbnail-2.jpg',
+    video3: '/tiktok-video-thumbnail-3.jpg',
+    video4: '/tiktok-video-thumbnail-4.jpg',
   },
 };
 
+// Cache mémoire immédiat pour éliminer toute latence et contourner les quotas stricts
+const memoryOverrides: Record<string, string> = {};
+
+// Nom de la base IndexedDB haute capacité pour stocker les images sans limite de quota
+const IDB_NAME = 'luxclean_media_db';
+const IDB_STORE = 'images';
+let dbPromise: Promise<IDBDatabase | null> | null = null;
+
+function getIDB(): Promise<IDBDatabase | null> {
+  if (typeof window === 'undefined' || !window.indexedDB) {
+    return Promise.resolve(null);
+  }
+  if (!dbPromise) {
+    dbPromise = new Promise((resolve) => {
+      try {
+        const req = indexedDB.open(IDB_NAME, 1);
+        req.onupgradeneeded = () => {
+          const db = req.result;
+          if (!db.objectStoreNames.contains(IDB_STORE)) {
+            db.createObjectStore(IDB_STORE);
+          }
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => resolve(null);
+      } catch {
+        resolve(null);
+      }
+    });
+  }
+  return dbPromise;
+}
+
 /**
- * Fonction d'aide pour obtenir l'image active (soit personnalisée en prévisualisation locale,
- * soit la configuration par défaut de production ci-dessus).
+ * Initialise le stockage d'images depuis IndexedDB et localStorage au démarrage
+ */
+export async function initImageStore(): Promise<void> {
+  if (typeof window === 'undefined') return;
+
+  // 1. Restauration rapide depuis localStorage
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith('luxclean_override_')) {
+        const slotId = k.replace('luxclean_override_', '');
+        const val = localStorage.getItem(k);
+        if (val) {
+          memoryOverrides[slotId] = val;
+        }
+      }
+    }
+  } catch {
+    // Quota ou restriction d'iframe
+  }
+
+  // 2. Restauration durable depuis IndexedDB (qui n'a pas de limite de 5 Mo)
+  try {
+    const db = await getIDB();
+    if (db) {
+      const tx = db.transaction(IDB_STORE, 'readonly');
+      const store = tx.objectStore(IDB_STORE);
+      const req = store.openCursor();
+      let updated = false;
+      req.onsuccess = (e) => {
+        const cursor = (e.target as IDBRequest<IDBCursorWithValue>).result;
+        if (cursor) {
+          const key = cursor.key as string;
+          const val = cursor.value as string;
+          if (key && val) {
+            memoryOverrides[key] = val;
+            updated = true;
+          }
+          cursor.continue();
+        } else if (updated) {
+          window.dispatchEvent(new CustomEvent('luxclean_images_updated', { detail: { source: 'idb_init' } }));
+        }
+      };
+    }
+  } catch {
+    // Ignore les erreurs d'IndexedDB en sandbox restreinte
+  }
+}
+
+// Auto-initialisation immédiate côté client
+if (typeof window !== 'undefined') {
+  initImageStore();
+}
+
+/**
+ * Enregistre une image en mémoire, dans IndexedDB et dans localStorage
+ */
+export function saveImageOverride(key: string, dataUrl: string): boolean {
+  memoryOverrides[key] = dataUrl;
+
+  // Sauvegarde dans IndexedDB (espace quasi-illimité pour les photos)
+  getIDB().then((db) => {
+    if (db) {
+      try {
+        const tx = db.transaction(IDB_STORE, 'readwrite');
+        tx.objectStore(IDB_STORE).put(dataUrl, key);
+      } catch (err) {
+        console.warn('Erreur sauvegarde IndexedDB:', err);
+      }
+    }
+  });
+
+  // Sauvegarde secondaire dans localStorage
+  if (typeof window !== 'undefined') {
+    try {
+      localStorage.setItem(`luxclean_override_${key}`, dataUrl);
+    } catch {
+      // Si localStorage est plein, IndexedDB et la mémoire vive prennent le relais
+    }
+    window.dispatchEvent(new CustomEvent('luxclean_images_updated', { detail: { key, value: dataUrl } }));
+  }
+  return true;
+}
+
+/**
+ * Supprime une surcharge d'image et rétablit l'image originale
+ */
+export function removeImageOverride(key: string): void {
+  delete memoryOverrides[key];
+
+  getIDB().then((db) => {
+    if (db) {
+      try {
+        const tx = db.transaction(IDB_STORE, 'readwrite');
+        tx.objectStore(IDB_STORE).delete(key);
+      } catch {}
+    }
+  });
+
+  if (typeof window !== 'undefined') {
+    try {
+      localStorage.removeItem(`luxclean_override_${key}`);
+    } catch {}
+    window.dispatchEvent(new CustomEvent('luxclean_images_updated', { detail: { key, removed: true } }));
+  }
+}
+
+/**
+ * Récupère l'image active (priorité: mémoire > localStorage > URL originale)
  */
 export function getActiveImage(key: string, fallbackUrl: string): string {
+  if (memoryOverrides[key]) {
+    return memoryOverrides[key];
+  }
   if (typeof window !== 'undefined') {
     try {
       const saved = localStorage.getItem(`luxclean_override_${key}`);
-      if (saved) return saved;
+      if (saved) {
+        memoryOverrides[key] = saved;
+        return saved;
+      }
     } catch {
       // Pas de stockage accessible
     }
   }
   return fallbackUrl;
+}
+
+/**
+ * Compresse et optimise intelligemment une image via Canvas HTML5.
+ * Ne rejette JAMAIS : intègre de multiples filets de sécurité pour que
+ * chaque photo importée (smartphone, appareil photo, URL) soit acceptée avec succès.
+ */
+export function compressImageFile(file: File, maxDimension = 1400, quality = 0.82): Promise<string> {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+
+    // Timeout de sécurité : si le navigateur tarde sur un gros fichier, on ne bloque jamais
+    const safetyTimeout = setTimeout(() => {
+      try {
+        resolve(URL.createObjectURL(file));
+      } catch {
+        resolve('');
+      }
+    }, 4500);
+
+    reader.onerror = () => {
+      clearTimeout(safetyTimeout);
+      try {
+        resolve(URL.createObjectURL(file));
+      } catch {
+        resolve('');
+      }
+    };
+
+    reader.onload = () => {
+      clearTimeout(safetyTimeout);
+      const rawDataUrl = reader.result as string;
+
+      // Si c'est un format vectoriel SVG, conserver tel quel
+      if (file.type === 'image/svg+xml' || file.name.toLowerCase().endsWith('.svg')) {
+        resolve(rawDataUrl);
+        return;
+      }
+
+      const img = new Image();
+      // Si le décodage échoue (ex: format brut ou HEIC spécifique), repli immédiat sur le DataURL d'origine
+      img.onerror = () => {
+        resolve(rawDataUrl);
+      };
+
+      img.onload = () => {
+        try {
+          let { width, height } = img;
+          if (width > maxDimension || height > maxDimension) {
+            if (width > height) {
+              height = Math.round((height * maxDimension) / width);
+              width = maxDimension;
+            } else {
+              width = Math.round((width * maxDimension) / height);
+              height = maxDimension;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.max(1, width);
+          canvas.height = Math.max(1, height);
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            resolve(rawDataUrl);
+            return;
+          }
+
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Test WebP puis JPEG
+          let resultDataUrl = '';
+          try {
+            resultDataUrl = canvas.toDataURL('image/webp', quality);
+          } catch {}
+
+          if (!resultDataUrl || !resultDataUrl.startsWith('data:image/webp')) {
+            try {
+              resultDataUrl = canvas.toDataURL('image/jpeg', quality);
+            } catch {}
+          }
+
+          resolve(resultDataUrl || rawDataUrl);
+        } catch {
+          resolve(rawDataUrl);
+        }
+      };
+
+      img.src = rawDataUrl;
+    };
+
+    reader.readAsDataURL(file);
+  });
 }

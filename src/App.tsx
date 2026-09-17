@@ -12,12 +12,20 @@ import { FAQ } from './components/FAQ';
 import { Footer } from './components/Footer';
 import { MobileBottomBar } from './components/MobileBottomBar';
 import { PreDeploymentMediaManager } from './components/PreDeploymentMediaManager';
+import { initImageStore } from './config/siteImages';
 import { ServiceItem } from './types';
+import { Image as ImageIcon } from 'lucide-react';
 
 export default function App() {
   const [selectedServiceForBooking, setSelectedServiceForBooking] = useState<string | undefined>(undefined);
+  const [selectedCategoryForQuote, setSelectedCategoryForQuote] = useState<string>('tapis');
   const [isMediaManagerOpen, setIsMediaManagerOpen] = useState(false);
-  const [mediaVersion, setMediaVersion] = useState(0);
+  const [, setMediaVersion] = useState(0);
+
+  // Initialize durable image store from IndexedDB
+  useEffect(() => {
+    initImageStore();
+  }, []);
 
   // Keyboard shortcut (Alt + M) or URL param (?media=1) to open media manager
   useEffect(() => {
@@ -47,6 +55,7 @@ export default function App() {
   };
 
   const handleSelectServiceForQuote = (service: ServiceItem) => {
+    setSelectedCategoryForQuote(service.category);
     scrollToSection('devis');
   };
 
@@ -60,11 +69,12 @@ export default function App() {
   };
 
   return (
-    <div key={mediaVersion} className="min-h-screen bg-[#060b18] text-slate-100 flex flex-col selection:bg-[#C5A869] selection:text-[#060B16]">
+    <div className="min-h-screen bg-[#060b18] text-slate-100 flex flex-col selection:bg-[#C5A869] selection:text-[#060B16]">
       {/* Navigation Bar */}
       <Navbar
         onOpenBooking={() => scrollToSection('reservation')}
         onOpenQuote={() => scrollToSection('devis')}
+        onOpenMediaManager={() => setIsMediaManagerOpen(true)}
       />
 
       {/* Main Content Sections */}
@@ -82,7 +92,7 @@ export default function App() {
         />
 
         {/* Online Quote Calculator with FCFA & WhatsApp */}
-        <QuoteCalculator />
+        <QuoteCalculator initialCategory={selectedCategoryForQuote} />
 
         {/* Interactive Before / After Gallery */}
         <BeforeAfterGallery />
@@ -104,7 +114,22 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <Footer />
+      <Footer onOpenMediaManager={() => setIsMediaManagerOpen(true)} />
+
+      {/* Floating Quick-Access Image Manager Button */}
+      <button
+        id="floating-image-manager-btn"
+        onClick={() => setIsMediaManagerOpen(true)}
+        className="fixed bottom-20 lg:bottom-6 left-4 z-40 px-3.5 py-2.5 bg-[#070e1f]/95 hover:bg-[#0f1d3e] text-white border-2 border-[#C5A869] hover:border-[#DFC792] rounded-full shadow-2xl backdrop-blur-md flex items-center gap-2 text-xs font-bold transition-all transform hover:scale-105 cursor-pointer group"
+        title="Ouvrir le gestionnaire pour modifier et téléverser toutes les images du site"
+      >
+        <span className="relative flex h-2.5 w-2.5">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C5A869] opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#C5A869]"></span>
+        </span>
+        <ImageIcon className="w-4 h-4 text-[#C5A869] group-hover:rotate-12 transition-transform" />
+        <span className="text-[#DFC792] font-semibold">📸 Gestionnaire d'Images</span>
+      </button>
 
       {/* Sticky Mobile Smartphone Action Bar */}
       <MobileBottomBar

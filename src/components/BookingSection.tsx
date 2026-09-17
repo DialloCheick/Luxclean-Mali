@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BAMAKO_DISTRICTS, SERVICES_LIST, COMPANY_INFO } from '../data/mockData';
 import { generateWhatsAppQuoteLink } from '../utils/whatsapp';
 import {
@@ -29,6 +29,13 @@ export const BookingSection: React.FC<BookingSectionProps> = ({ preselectedServi
   const [isBooked, setIsBooked] = useState(false);
   const [bookingCode, setBookingCode] = useState('');
 
+  // Sync with preselectedServiceId when user clicks "Prendre RDV" in the service catalog
+  useEffect(() => {
+    if (preselectedServiceId) {
+      setSelectedServiceId(preselectedServiceId);
+    }
+  }, [preselectedServiceId]);
+
   const selectedService = SERVICES_LIST.find(s => s.id === selectedServiceId) || SERVICES_LIST[0];
 
   const handleWhatsAppBooking = () => {
@@ -45,7 +52,10 @@ export const BookingSection: React.FC<BookingSectionProps> = ({ preselectedServi
       customNotes: notes || undefined,
     });
 
-    window.open(link, '_blank');
+    const newWindow = window.open(link, '_blank', 'noopener,noreferrer');
+    if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+      window.location.href = link;
+    }
   };
 
   const handleOnlineBooking = (e: React.FormEvent) => {

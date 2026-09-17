@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { BAMAKO_DISTRICTS, PAYMENT_METHODS, COMPANY_INFO } from '../data/mockData';
 import { formatFCFA, generateWhatsAppQuoteLink } from '../utils/whatsapp';
 import {
@@ -28,6 +28,18 @@ interface QuoteCalculatorProps {
 export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategory }) => {
   // Category state
   const [activeTab, setActiveTab] = useState<'tapis' | 'canapes' | 'moquette_mosquee' | 'moquette_bureau' | 'matelas' | 'auto'>('tapis');
+
+  // Synchronize category if changed from parent (e.g. clicking "Simuler Devis" on a service card)
+  useEffect(() => {
+    if (initialCategory) {
+      if (initialCategory === 'tapis' || initialCategory === 'tapis_maison') setActiveTab('tapis');
+      else if (initialCategory === 'canapes' || initialCategory === 'canapes_salons') setActiveTab('canapes');
+      else if (initialCategory === 'moquette_mosquee') setActiveTab('moquette_mosquee');
+      else if (initialCategory === 'moquette_bureau') setActiveTab('moquette_bureau');
+      else if (initialCategory === 'matelas' || initialCategory === 'matelas_literie') setActiveTab('matelas');
+      else if (initialCategory === 'auto' || initialCategory === 'interieur_auto' || initialCategory === 'vehicules_auto') setActiveTab('auto');
+    }
+  }, [initialCategory]);
 
   // Items configuration state
   // Tapis
@@ -263,7 +275,10 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
       customNotes: customNotes || undefined,
     });
 
-    window.open(link, '_blank');
+    const newWindow = window.open(link, '_blank', 'noopener,noreferrer');
+    if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+      window.location.href = link;
+    }
   };
 
   const handleConfirmQuoteOnline = (e: React.FormEvent) => {

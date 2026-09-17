@@ -29,7 +29,7 @@ export const Testimonials: React.FC = () => {
             </div>
             <span className="text-xs font-black text-white">4.9 / 5 étoiles</span>
             <span className="text-[#C5A869]/40">•</span>
-            <span className="text-xs text-slate-300">Plus de 180 interventions certifiées</span>
+            <span className="text-xs text-slate-300">Satisfaction garantie à chaque intervention</span>
           </div>
         </div>
 
@@ -77,8 +77,12 @@ export const Testimonials: React.FC = () => {
                     )}
                   </div>
                   <div className="text-xs text-slate-400 flex items-center gap-1.5 mt-0.5">
-                    <span>{test.roleOrCompany}</span>
-                    <span>•</span>
+                    {test.roleOrCompany && (
+                      <>
+                        <span>{test.roleOrCompany}</span>
+                        <span>•</span>
+                      </>
+                    )}
                     <span className="flex items-center gap-0.5 text-[#C5A869] font-medium">
                       <MapPin className="w-3 h-3" />
                       {test.neighborhood}

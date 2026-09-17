@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Sparkles, ArrowRight, Clock, CheckCircle2, MessageCircle, Star, MapPin, Award } from 'lucide-react';
 import { COMPANY_INFO } from '../data/mockData';
 import { SITE_IMAGES, getActiveImage } from '../config/siteImages';
+import heroMainImg from '../assets/images/regenerated_image_1789578624366.png';
 
 interface HeroProps {
   onOpenQuote: () => void;
@@ -9,6 +10,21 @@ interface HeroProps {
 }
 
 export const Hero: React.FC<HeroProps> = ({ onOpenQuote, onOpenBooking }) => {
+  const [, setRefreshTick] = useState(0);
+
+  useEffect(() => {
+    const handleUpdate = () => setRefreshTick((t) => t + 1);
+    window.addEventListener('luxclean_images_updated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+    return () => {
+      window.removeEventListener('luxclean_images_updated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
+  }, []);
+
+  const heroImageSrc = heroMainImg || getActiveImage('hero_main', SITE_IMAGES.hero.main);
+  const logoImageSrc = getActiveImage('brand_logo', COMPANY_INFO.logoUrl);
+
   const directWhatsAppUrl = `https://wa.me/${COMPANY_INFO.whatsappNumber}?text=${encodeURIComponent(
     "Bonjour Lux Clean Mali, je souhaite avoir des informations ou réserver un nettoyage à Bamako."
   )}`;
@@ -28,7 +44,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenQuote, onOpenBooking }) => {
             <div className="inline-flex items-center gap-3 p-1.5 pr-5 rounded-2xl bg-[#0a142c]/90 border border-[#C5A869]/35 shadow-xl backdrop-blur-md">
               <div className="w-11 h-11 rounded-xl overflow-hidden border border-[#C5A869]/40 shrink-0 bg-[#060b17] shadow-inner">
                 <img
-                  src={COMPANY_INFO.logoUrl}
+                  src={logoImageSrc}
                   alt={COMPANY_INFO.name}
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
@@ -146,7 +162,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenQuote, onOpenBooking }) => {
                 {/* Hero Image */}
                 <div className="relative h-72 sm:h-84 w-full overflow-hidden">
                   <img
-                    src={getActiveImage('hero_main', SITE_IMAGES.hero.main)}
+                    src={heroImageSrc}
                     alt="Brossage mécanique haute puissance sur canapé et tissus à Bamako - Lux Clean Mali"
                     className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
                     referrerPolicy="no-referrer"
@@ -163,7 +179,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenQuote, onOpenBooking }) => {
                   <div className="absolute top-4 right-4 bg-[#060b18]/85 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-[#C5A869]/30 text-xs flex items-center gap-1.5 text-[#C5A869] font-bold">
                     <Star className="w-3.5 h-3.5 fill-[#C5A869]" />
                     <span className="text-white">4.9 / 5</span>
-                    <span className="text-slate-300 font-normal">(180+ avis)</span>
+                    <span className="text-slate-300 font-normal">(Avis clients)</span>
                   </div>
 
                   {/* Bottom overlay text */}
@@ -181,8 +197,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenQuote, onOpenBooking }) => {
                 <div className="p-5 space-y-4 bg-[#091329]">
                   <div className="grid grid-cols-3 gap-2.5 text-center">
                     <div className="p-3 rounded-xl bg-[#0d1c3a] border border-[#C5A869]/20">
-                      <div className="text-lg font-black text-[#C5A869] font-display">4 800+</div>
-                      <div className="text-[11px] text-slate-300">Clients Bamako</div>
+                      <div className="text-lg font-black text-[#C5A869] font-display">100%</div>
+                      <div className="text-[11px] text-slate-300">Satisfait ou Refait</div>
                     </div>
                     <div className="p-3 rounded-xl bg-[#0d1c3a] border border-[#C5A869]/20">
                       <div className="text-lg font-black text-white font-display">99.8%</div>

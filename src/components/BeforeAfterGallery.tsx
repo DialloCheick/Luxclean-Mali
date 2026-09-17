@@ -1,14 +1,42 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { BEFORE_AFTER_ITEMS, COMPANY_INFO } from '../data/mockData';
 import { BeforeAfterItem } from '../types';
+import { getActiveImage } from '../config/siteImages';
 import { Sparkles, ArrowLeftRight, Check, MapPin, Clock, Video, ExternalLink } from 'lucide-react';
 
-export const BeforeAfterGallery: React.FC = () => {
+interface BeforeAfterGalleryProps {}
+
+const getSlotIdForItem = (category: string, type: 'before' | 'after'): string => {
+  if (category === 'canapes') return `ba_canape_${type}`;
+  if (category === 'tapis') return `ba_tapis_${type}`;
+  if (category === 'moquette_mosquee') return `ba_mosquee_${type}`;
+  if (category === 'moquette_bureau') return `ba_bureau_${type}`;
+  return `ba_${category}_${type}`;
+};
+
+export const BeforeAfterGallery: React.FC<BeforeAfterGalleryProps> = () => {
   const [selectedItemIndex, setSelectedItemIndex] = useState(0);
   const [sliderPosition, setSliderPosition] = useState(50); // percentage 0 to 100
   const [isDragging, setIsDragging] = useState(false);
   const [containerWidth, setContainerWidth] = useState<number>(0);
+  const [, setRefreshTick] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const currentItem: BeforeAfterItem = BEFORE_AFTER_ITEMS[selectedItemIndex];
+
+  // Écoute des mises à jour en direct du gestionnaire de médias
+  useEffect(() => {
+    const handleUpdate = () => setRefreshTick((t) => t + 1);
+    window.addEventListener('luxclean_images_updated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+    return () => {
+      window.removeEventListener('luxclean_images_updated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
+  }, []);
+
+  const activeBeforeImg = getActiveImage(getSlotIdForItem(currentItem.category, 'before'), currentItem.beforeImg);
+  const activeAfterImg = getActiveImage(getSlotIdForItem(currentItem.category, 'after'), currentItem.afterImg);
 
   useEffect(() => {
     const updateWidth = () => {
@@ -21,8 +49,6 @@ export const BeforeAfterGallery: React.FC = () => {
     return () => window.removeEventListener('resize', updateWidth);
   }, []);
 
-  const currentItem: BeforeAfterItem = BEFORE_AFTER_ITEMS[selectedItemIndex];
-
   // Touch and mouse handlers for interactive slider
   const handleMove = (clientX: number) => {
     if (!containerRef.current) return;
@@ -33,10 +59,26 @@ export const BeforeAfterGallery: React.FC = () => {
     setSliderPosition(percentage);
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  // Global window listeners while dragging to ensure smooth continuous drag
+  useEffect(() => {
     if (!isDragging) return;
-    handleMove(e.clientX);
-  };
+
+    const onGlobalMouseMove = (e: MouseEvent) => {
+      handleMove(e.clientX);
+    };
+
+    const onGlobalMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    window.addEventListener('mousemove', onGlobalMouseMove);
+    window.addEventListener('mouseup', onGlobalMouseUp);
+
+    return () => {
+      window.removeEventListener('mousemove', onGlobalMouseMove);
+      window.removeEventListener('mouseup', onGlobalMouseUp);
+    };
+  }, [isDragging]);
 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (e.touches.length > 0) {
@@ -50,9 +92,11 @@ export const BeforeAfterGallery: React.FC = () => {
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#0d1c3a] text-[#DFC792] border border-[#C5A869]/25 mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-[#C5A869]" />
-            <span>Galerie Résultats Concrets • Bamako</span>
+          <div className="flex flex-wrap items-center justify-center gap-3 mb-3">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#0d1c3a] text-[#DFC792] border border-[#C5A869]/25">
+              <Sparkles className="w-3.5 h-3.5 text-[#C5A869]" />
+              <span>Galerie Résultats Concrets • Bamako</span>
+            </div>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold font-display text-white tracking-tight">
             Avant / Après : <span className="text-gold-gradient">La Preuve en Image</span>
@@ -114,24 +158,32 @@ export const BeforeAfterGallery: React.FC = () => {
           {/* Interactive Slider Area */}
           <div
             ref={containerRef}
-            onMouseDown={() => setIsDragging(true)}
-            onMouseUp={() => setIsDragging(false)}
-            onMouseLeave={() => setIsDragging(false)}
-            onMouseMove={handleMouseMove}
+            onMouseDown={(e) => {
+              setIsDragging(true);
+              handleMove(e.clientX);
+            }}
+            onTouchStart={(e) => {
+              if (e.touches.length > 0) {
+                handleMove(e.touches[0].clientX);
+              }
+            }}
             onTouchMove={handleTouchMove}
             className="relative h-80 sm:h-96 md:h-[450px] w-full select-none cursor-ew-resize overflow-hidden bg-[#060b18]"
           >
             {/* "AFTER" Image (Full background) */}
             <img
-              src={currentItem.afterImg}
+              src={activeAfterImg}
               alt={`${currentItem.title} après nettoyage`}
               className="absolute inset-0 w-full h-full object-cover pointer-events-none"
               referrerPolicy="no-referrer"
             />
+
             {/* After Tag */}
-            <div className="absolute top-4 right-4 bg-emerald-600/90 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg backdrop-blur-md shadow-lg pointer-events-none flex items-center gap-1.5 border border-emerald-400/40">
-              <Check className="w-4 h-4 text-white" />
-              <span>APRÈS NETTOYAGE</span>
+            <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+              <div className="bg-emerald-600/90 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg backdrop-blur-md shadow-lg flex items-center gap-1.5 border border-emerald-400/40">
+                <Check className="w-4 h-4 text-white" />
+                <span>APRÈS NETTOYAGE</span>
+              </div>
             </div>
 
             {/* "BEFORE" Image (Clipped overlay) */}
@@ -140,7 +192,7 @@ export const BeforeAfterGallery: React.FC = () => {
               style={{ width: `${sliderPosition}%` }}
             >
               <img
-                src={currentItem.beforeImg}
+                src={activeBeforeImg}
                 alt={`${currentItem.title} avant nettoyage`}
                 className="absolute inset-0 w-full h-full object-cover max-w-none pointer-events-none"
                 style={{
@@ -149,8 +201,11 @@ export const BeforeAfterGallery: React.FC = () => {
                 }}
                 referrerPolicy="no-referrer"
               />
-              {/* Before Tag */}
-              <div className="absolute top-4 left-4 bg-rose-600/90 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg backdrop-blur-md shadow-lg pointer-events-none flex items-center gap-1.5 border border-rose-400/40">
+            </div>
+
+            {/* Before Tag */}
+            <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
+              <div className="bg-rose-600/90 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg backdrop-blur-md shadow-lg flex items-center gap-1.5 border border-rose-400/40">
                 <span>AVANT INTERVENTION</span>
               </div>
             </div>
@@ -199,7 +254,7 @@ export const BeforeAfterGallery: React.FC = () => {
           </div>
         </div>
 
-        {/* TikTok Highlight Card - Maintained in distinctive red as requested */}
+        {/* TikTok Highlight Card */}
         <div className="mt-12 max-w-4xl mx-auto rounded-3xl bg-gradient-to-r from-[#1c0812] via-[#09142b] to-[#09142b] border border-rose-500/40 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl shadow-rose-950/20">
           <div className="flex items-center gap-4 text-left">
             <div className="w-14 h-14 rounded-2xl bg-rose-500/15 border border-rose-500/40 flex items-center justify-center text-rose-400 shrink-0 shadow-inner">

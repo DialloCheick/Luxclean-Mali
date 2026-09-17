@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { COMPANY_INFO } from '../data/mockData';
+import { SITE_IMAGES, getActiveImage } from '../config/siteImages';
 
 interface BrandLogoProps {
   size?: 'sm' | 'md' | 'lg' | 'hero';
@@ -14,6 +15,19 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
   className = '',
   variant = 'full',
 }) => {
+  const [, setRefreshTick] = useState(0);
+
+  useEffect(() => {
+    const handleUpdate = () => setRefreshTick((t) => t + 1);
+    window.addEventListener('luxclean_images_updated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+    return () => {
+      window.removeEventListener('luxclean_images_updated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
+  }, []);
+
+  const logoSrc = getActiveImage('brand_logo', COMPANY_INFO.logoUrl);
   const getIconDimensions = () => {
     switch (size) {
       case 'sm':
@@ -50,7 +64,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
         className={`relative rounded-xl overflow-hidden shadow-xl border border-[#C5A869]/40 ring-1 ring-[#C5A869]/20 bg-[#070e1f] shrink-0 ${getIconDimensions()} ${className}`}
       >
         <img
-          src={COMPANY_INFO.logoUrl}
+          src={logoSrc}
           alt={COMPANY_INFO.name}
           className="w-full h-full object-cover"
           referrerPolicy="no-referrer"
@@ -67,7 +81,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
         className={`relative rounded-xl overflow-hidden shadow-xl border-2 border-[#C5A869]/45 ring-1 ring-[#C5A869]/20 bg-[#070e1f] shrink-0 transition-transform duration-300 group-hover:scale-105 ${getIconDimensions()}`}
       >
         <img
-          src={COMPANY_INFO.logoUrl}
+          src={logoSrc}
           alt={COMPANY_INFO.name}
           className="w-full h-full object-cover"
           referrerPolicy="no-referrer"

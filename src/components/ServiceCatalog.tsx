@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SERVICES_LIST } from '../data/mockData';
 import { ServiceItem, ServiceCategory } from '../types';
+import { getActiveImage } from '../config/siteImages';
 import { Sparkles, Check, ArrowRight, Shield, Clock, Award, Moon, Building2, Armchair, BedDouble, Car } from 'lucide-react';
 import { formatFCFA } from '../utils/whatsapp';
 
@@ -9,11 +10,32 @@ interface ServiceCatalogProps {
   onSelectServiceForBooking: (service: ServiceItem) => void;
 }
 
+const getServiceSlotId = (serviceId: string): string => {
+  if (serviceId === 'tapis_maison' || serviceId === 'tapis') return 'service_tapis';
+  if (serviceId === 'moquette_mosquee') return 'service_mosquee';
+  if (serviceId === 'moquette_bureau') return 'service_bureau';
+  if (serviceId === 'canapes_salons' || serviceId === 'canapes') return 'service_canapes';
+  if (serviceId === 'matelas_literie' || serviceId === 'matelas') return 'service_matelas';
+  if (serviceId === 'interieur_auto' || serviceId === 'vehicules_auto' || serviceId === 'auto') return 'service_auto';
+  return `service_${serviceId}`;
+};
+
 export const ServiceCatalog: React.FC<ServiceCatalogProps> = ({
   onSelectServiceForQuote,
   onSelectServiceForBooking,
 }) => {
   const [activeFilter, setActiveFilter] = useState<string>('all');
+  const [, setRefreshTick] = useState(0);
+
+  useEffect(() => {
+    const handleUpdate = () => setRefreshTick((t) => t + 1);
+    window.addEventListener('luxclean_images_updated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+    return () => {
+      window.removeEventListener('luxclean_images_updated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
+  }, []);
 
   const filteredServices = activeFilter === 'all'
     ? SERVICES_LIST
@@ -113,7 +135,7 @@ export const ServiceCatalog: React.FC<ServiceCatalogProps> = ({
               {/* Image Banner */}
               <div className="relative h-56 w-full overflow-hidden bg-[#060b17]">
                 <img
-                  src={service.imageUrl}
+                  src={getActiveImage(getServiceSlotId(service.id), service.imageUrl)}
                   alt={service.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   referrerPolicy="no-referrer"

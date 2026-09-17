@@ -4,14 +4,16 @@ import { SITE_IMAGES, getActiveImage } from '../config/siteImages';
 export const COMPANY_INFO = {
   name: 'LUXCLEAN MALI',
   officialSlogan: 'Votre confort, notre signature.',
-  logoUrl: getActiveImage('brand_logo', SITE_IMAGES.brand.logo),
+  get logoUrl() {
+    return getActiveImage('brand_logo', SITE_IMAGES.brand.logo);
+  },
   tagline: 'L’Art du Nettoyage et de la Désinfection Haute Pression à Bamako',
   subtitle: 'Tapis précieux • Moquettes de Mosquées & Bureaux • Salons & Canapés haut de gamme',
   phone1: '+223 75 53 93 61',
   phone2: '+223 66 12 34 56',
   whatsappNumber: '22375539361',
   whatsappDisplay: '+223 75 53 93 61',
-  tiktokUrl: 'https://www.tiktok.com/@luxcleanmali223?',
+  tiktokUrl: 'https://www.tiktok.com/@luxcleanmali223',
   tiktokHandle: '@luxcleanmali223',
   websiteUrl: 'https://luxcleanmali.com',
   websiteDomain: 'luxcleanmali.com',
@@ -19,8 +21,8 @@ export const COMPANY_INFO = {
   email: 'luxcleanmali@gmail.com',
   workingHours: '7j/7 : 07h30 - 20h30 (Interventions de nuit possibles pour Mosquées & Bureaux)',
   guaranteeText: '100% Satisfait ou Réintervention gratuite',
-  experienceYears: '6+ ans d’excellence à Bamako',
-  interventionsDone: '4 800+ clients satisfaits',
+  experienceYears: 'Service d’excellence à Bamako',
+  interventionsDone: '100% clients satisfaits',
 };
 
 export const BAMAKO_DISTRICTS: BamakoDistrict[] = [
@@ -222,8 +224,8 @@ export const TESTIMONIALS: TestimonialItem[] = [
   },
   {
     id: 'test-3',
-    name: 'Directeur Administratif (M. Diarra)',
-    roleOrCompany: 'Cabinet Conseil & Audit',
+    name: 'M. Diarra',
+    roleOrCompany: '',
     neighborhood: 'Cité du Niger',
     rating: 5,
     date: 'Il y a 2 semaines',
@@ -233,8 +235,8 @@ export const TESTIMONIALS: TestimonialItem[] = [
   },
   {
     id: 'test-4',
-    name: 'Dr. Aïssata Keita',
-    roleOrCompany: 'Médecin & Mère de famille',
+    name: 'Aïssata Keita',
+    roleOrCompany: '',
     neighborhood: 'Sotuba',
     rating: 5,
     date: 'Il y a 2 semaines',

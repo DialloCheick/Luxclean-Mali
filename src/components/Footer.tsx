@@ -1,13 +1,13 @@
 import React from 'react';
 import { COMPANY_INFO, BAMAKO_DISTRICTS } from '../data/mockData';
 import { BrandLogo } from './BrandLogo';
-import { MapPin, Clock, Mail, Image as ImageIcon } from 'lucide-react';
+import { MapPin, Clock, Mail } from 'lucide-react';
 
 interface FooterProps {
   onOpenMediaManager?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenMediaManager }) => {
+export const Footer: React.FC<FooterProps> = () => {
   return (
     <footer className="bg-[#040710] text-slate-400 text-xs border-t border-[#C5A869]/20 pt-16 pb-24 lg:pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -137,18 +137,6 @@ export const Footer: React.FC<FooterProps> = ({ onOpenMediaManager }) => {
             <p className="text-[11px] text-slate-400 text-center sm:text-left">
               © {new Date().getFullYear()} {COMPANY_INFO.name} Bamako — Tous droits réservés. Excellence & Hygiène Certifiée.
             </p>
-            {onOpenMediaManager && (
-              <>
-                <span className="text-slate-600 hidden sm:inline">•</span>
-                <button
-                  onClick={onOpenMediaManager}
-                  className="text-[11px] text-[#DFC792] hover:text-white underline flex items-center gap-1 transition-colors cursor-pointer"
-                >
-                  <ImageIcon className="w-3.5 h-3.5 text-[#C5A869]" />
-                  <span>Gestionnaire des Images</span>
-                </button>
-              </>
-            )}
           </div>
 
           <div className="flex items-center gap-2 text-[10px]">

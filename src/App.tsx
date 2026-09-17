@@ -14,7 +14,6 @@ import { MobileBottomBar } from './components/MobileBottomBar';
 import { PreDeploymentMediaManager } from './components/PreDeploymentMediaManager';
 import { initImageStore } from './config/siteImages';
 import { ServiceItem } from './types';
-import { Image as ImageIcon } from 'lucide-react';
 
 export default function App() {
   const [selectedServiceForBooking, setSelectedServiceForBooking] = useState<string | undefined>(undefined);
@@ -74,7 +73,6 @@ export default function App() {
       <Navbar
         onOpenBooking={() => scrollToSection('reservation')}
         onOpenQuote={() => scrollToSection('devis')}
-        onOpenMediaManager={() => setIsMediaManagerOpen(true)}
       />
 
       {/* Main Content Sections */}
@@ -114,22 +112,7 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <Footer onOpenMediaManager={() => setIsMediaManagerOpen(true)} />
-
-      {/* Floating Quick-Access Image Manager Button */}
-      <button
-        id="floating-image-manager-btn"
-        onClick={() => setIsMediaManagerOpen(true)}
-        className="fixed bottom-20 lg:bottom-6 left-4 z-40 px-3.5 py-2.5 bg-[#070e1f]/95 hover:bg-[#0f1d3e] text-white border-2 border-[#C5A869] hover:border-[#DFC792] rounded-full shadow-2xl backdrop-blur-md flex items-center gap-2 text-xs font-bold transition-all transform hover:scale-105 cursor-pointer group"
-        title="Ouvrir le gestionnaire pour modifier et téléverser toutes les images du site"
-      >
-        <span className="relative flex h-2.5 w-2.5">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C5A869] opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#C5A869]"></span>
-        </span>
-        <ImageIcon className="w-4 h-4 text-[#C5A869] group-hover:rotate-12 transition-transform" />
-        <span className="text-[#DFC792] font-semibold">📸 Gestionnaire d'Images</span>
-      </button>
+      <Footer />
 
       {/* Sticky Mobile Smartphone Action Bar */}
       <MobileBottomBar

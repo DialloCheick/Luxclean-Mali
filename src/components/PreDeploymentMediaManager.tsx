@@ -21,6 +21,7 @@ import {
   Loader2,
   CheckCircle2,
   AlertCircle,
+  Save,
 } from 'lucide-react';
 
 interface MediaManagerProps {
@@ -199,7 +200,43 @@ export const PreDeploymentMediaManager: React.FC<MediaManagerProps> = ({
   const [dragOverSlotId, setDragOverSlotId] = useState<string | null>(null);
   const [editingUrlSlotId, setEditingUrlSlotId] = useState<string | null>(null);
   const [urlInputValue, setUrlInputValue] = useState('');
+  const [isSavingToServer, setIsSavingToServer] = useState(false);
   const feedbackTimerRef = useRef<number | null>(null);
+
+  const saveToServer = async (slotId: string, dataUrl: string) => {
+    try {
+      const res = await fetch('/api/save-site-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ slotId, dataUrl }),
+      });
+      if (res.ok) {
+        return true;
+      }
+    } catch {
+      // Dev middleware might not be reachable if compiled/static
+    }
+    return false;
+  };
+
+  const handleSyncAllToDisk = async () => {
+    setIsSavingToServer(true);
+    showNotification('Sauvegarde physique de toutes les images dans les fichiers du site...', 'info');
+    let saved = 0;
+    try {
+      for (const [slotId, val] of Object.entries(overrides)) {
+        if (typeof val === 'string' && val.startsWith('data:image/')) {
+          const ok = await saveToServer(slotId, val);
+          if (ok) saved++;
+        }
+      }
+      showNotification(`✅ Vos images sont enregistrées physiquement dans les fichiers du site (prêtes pour publication) !`, 'success');
+    } catch (err) {
+      showNotification('Erreur lors de la sauvegarde sur disque.', 'error');
+    } finally {
+      setIsSavingToServer(false);
+    }
+  };
 
   const showNotification = (text: string, type: 'success' | 'error' | 'info' = 'success') => {
     if (feedbackTimerRef.current) {
@@ -251,10 +288,13 @@ export const PreDeploymentMediaManager: React.FC<MediaManagerProps> = ({
       // 2. Sauvegarde double (Mémoire vive + IndexedDB + LocalStorage)
       saveImageOverride(slotId, dataUrl);
 
-      // 3. Mise à jour synchrone locale du gestionnaire
+      // 3. Sauvegarde physique automatique sur le serveur (dans public/)
+      await saveToServer(slotId, dataUrl);
+
+      // 4. Mise à jour synchrone locale du gestionnaire
       setOverrides((prev) => ({ ...prev, [slotId]: dataUrl }));
 
-      // 4. Notification immédiate à l'application
+      // 5. Notification immédiate à l'application
       onImagesUpdated();
 
       const slot = ALL_IMAGE_SLOTS.find((s) => s.id === slotId);
@@ -446,7 +486,23 @@ export const SITE_IMAGES = {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-2 shrink-0 flex-wrap sm:flex-nowrap">
+            {modifiedCount > 0 && (
+              <button
+                onClick={handleSyncAllToDisk}
+                disabled={isSavingToServer}
+                className="px-3 py-1.5 rounded-xl bg-[#C5A869] hover:bg-[#DFC792] text-[#070e20] font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer shadow-lg disabled:opacity-50"
+                title="Enregistrer physiquement les photos dans les fichiers du site pour la publication"
+              >
+                {isSavingToServer ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin text-[#070e20]" />
+                ) : (
+                  <Save className="w-3.5 h-3.5 text-[#070e20]" />
+                )}
+                <span>{isSavingToServer ? 'Sauvegarde...' : 'Sauvegarder dans le site'}</span>
+              </button>
+            )}
+
             <button
               onClick={copyConfigCode}
               className="px-3 py-1.5 rounded-xl bg-[#0d1c3a] hover:bg-[#132750] text-[#DFC792] border border-[#C5A869]/40 hover:border-[#C5A869] font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"

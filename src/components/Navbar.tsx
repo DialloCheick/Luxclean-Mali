@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { COMPANY_INFO } from '../data/mockData';
 import { BrandLogo } from './BrandLogo';
-import { Phone, Menu, X, Calendar, Calculator, Image as ImageIcon } from 'lucide-react';
+import { Phone, Menu, X, Calendar, Calculator } from 'lucide-react';
 
 interface NavbarProps {
   onOpenBooking: () => void;
   onOpenQuote: () => void;
-  onOpenMediaManager: () => void;
+  onOpenMediaManager?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenQuote, onOpenMediaManager }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenQuote }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
@@ -39,15 +39,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenQuote, onOp
           </div>
 
           <div className="flex items-center gap-3 text-xs">
-            <button
-              onClick={onOpenMediaManager}
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#C5A869]/20 hover:bg-[#C5A869]/35 text-[#DFC792] border border-[#C5A869]/40 hover:border-[#C5A869] transition-all font-semibold text-[11px] cursor-pointer shadow-sm"
-              title="Ouvrir le gestionnaire pour téléverser et remplacer toutes les photos"
-            >
-              <ImageIcon className="w-3.5 h-3.5 text-[#C5A869]" />
-              <span>Gestion Images</span>
-            </button>
-
             <a
               href={`tel:${COMPANY_INFO.phone1.replace(/\s+/g, '')}`}
               className="flex items-center gap-1.5 text-white hover:text-[#DFC792] transition-colors font-medium"
@@ -92,15 +83,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenQuote, onOp
           {/* Action CTAs with Sober Logo Gold */}
           <div className="hidden sm:flex items-center gap-2.5">
             <button
-              onClick={onOpenMediaManager}
-              className="px-3 py-2 text-xs font-bold text-[#DFC792] hover:text-white bg-[#0a152e] hover:bg-[#11234c] border border-[#C5A869]/40 hover:border-[#C5A869] rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
-              title="Gérer, remplacer et téléverser toutes les photos du site"
-            >
-              <ImageIcon className="w-3.5 h-3.5 text-[#C5A869]" />
-              <span>Gestion Images</span>
-            </button>
-
-            <button
               onClick={onOpenQuote}
               className="px-3.5 py-2 text-xs font-semibold text-white hover:text-[#DFC792] bg-[#0d1a38] hover:bg-[#13254e] border border-[#C5A869]/30 hover:border-[#C5A869]/60 rounded-xl transition-all flex items-center gap-2 cursor-pointer shadow-sm"
             >
@@ -119,14 +101,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenQuote, onOp
 
           {/* Mobile Menu Trigger */}
           <div className="flex items-center gap-2 lg:hidden">
-            <button
-              onClick={onOpenMediaManager}
-              className="px-2.5 py-1.5 text-xs font-bold text-[#DFC792] bg-[#0a152e] border border-[#C5A869]/40 rounded-lg shadow-sm flex items-center gap-1"
-              title="Gérer les photos"
-            >
-              <ImageIcon className="w-3.5 h-3.5 text-[#C5A869]" />
-              <span>Images</span>
-            </button>
             <button
               onClick={onOpenBooking}
               className="sm:hidden px-3 py-1.5 text-xs font-bold text-[#060B16] bg-gold-gradient rounded-lg shadow-sm"
@@ -168,17 +142,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenQuote, onOp
                 Prendre RDV
               </button>
             </div>
-
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenMediaManager();
-              }}
-              className="w-full py-2.5 px-3 bg-[#0f1f45] border border-[#C5A869]/50 text-[#DFC792] hover:text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-sm"
-            >
-              <ImageIcon className="w-4 h-4 text-[#C5A869]" />
-              <span>📸 Gérer & Téléverser les Images</span>
-            </button>
 
             <div className="flex flex-col space-y-1">
               {navLinks.map((link) => (

@@ -38,7 +38,10 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({
   const links = [
     { href: whatsappUrl, label: 'WhatsApp', Icon: WhatsAppIcon, hoverClass: 'hover:text-emerald-400 hover:border-emerald-500/50' },
     { href: COMPANY_INFO.tiktokUrl, label: 'TikTok', Icon: TikTokIcon, hoverClass: 'hover:text-[#DFC792] hover:border-[#C5A869]/60' },
-    { href: COMPANY_INFO.facebookUrl, label: 'Facebook', Icon: FacebookIcon, hoverClass: 'hover:text-sky-400 hover:border-sky-500/50' },
+    // Facebook only shows once COMPANY_INFO.facebookUrl is a real, confirmed URL.
+    ...(COMPANY_INFO.facebookUrl
+      ? [{ href: COMPANY_INFO.facebookUrl, label: 'Facebook', Icon: FacebookIcon, hoverClass: 'hover:text-sky-400 hover:border-sky-500/50' }]
+      : []),
   ];
 
   return (

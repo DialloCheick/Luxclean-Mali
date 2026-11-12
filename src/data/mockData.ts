@@ -15,8 +15,10 @@ export const COMPANY_INFO = {
   whatsappDisplay: '+223 75 53 93 61',
   tiktokUrl: 'https://www.tiktok.com/@luxcleanmali223',
   tiktokHandle: '@luxcleanmali223',
-  // TODO(Cheick): remplacez par l'URL réelle de votre page Facebook (ex: https://www.facebook.com/luxcleanmali223)
-  facebookUrl: 'https://www.facebook.com/luxcleanmali223',
+  // Laissez vide tant que la page Facebook n'existe pas / n'est pas confirmée.
+  // Dès que vous avez l'URL réelle, collez-la ici — le lien apparaîtra
+  // automatiquement partout (menu, footer).
+  facebookUrl: '',
   websiteUrl: 'https://luxcleanmali.com',
   websiteDomain: 'luxcleanmali.com',
   address: 'Sirakoro Meguetana, Bamako - Mali',

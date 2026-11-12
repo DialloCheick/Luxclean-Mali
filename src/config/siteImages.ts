@@ -28,7 +28,7 @@ export interface ImageConfigItem {
 export const SITE_IMAGES = {
   // 1. Logo officiel & Identité de la marque
   brand: {
-    logo: '/luxclean-logo.jpg',
+    logo: '/luxclean-logo-optimized.jpg',
   },
 
   // 2. Section Hero (Grande photo d'accueil)
@@ -72,7 +72,7 @@ export const SITE_IMAGES = {
     moquetteBureau: '/bureau-after.jpg',
     canapesSalons: '/sofa-after-clean.jpg',
     matelasLiterie: '/matelas-clean.jpg',
-    interieurAuto: '/interieur-auto.png',
+    interieurAuto: '/interieur-auto.jpg',
   },
 
   // 5. Vidéos & Réalisations TikTok (@luxcleanmali223)

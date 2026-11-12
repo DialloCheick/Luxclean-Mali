@@ -182,10 +182,11 @@ export const BookingSection: React.FC<BookingSectionProps> = ({ preselectedServi
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs text-slate-400 mb-1">Nom complet *</label>
+                  <label htmlFor="booking-client-name" className="block text-xs text-slate-400 mb-1">Nom complet *</label>
                   <div className="relative">
                     <User className="w-4 h-4 text-[#C5A869]/60 absolute left-3 top-3" />
                     <input
+                      id="booking-client-name"
                       type="text"
                       required
                       placeholder="Ex: Ibrahim Touré"
@@ -197,10 +198,11 @@ export const BookingSection: React.FC<BookingSectionProps> = ({ preselectedServi
                 </div>
 
                 <div>
-                  <label className="block text-xs text-slate-400 mb-1">Numéro WhatsApp *</label>
+                  <label htmlFor="booking-client-phone" className="block text-xs text-slate-400 mb-1">Numéro WhatsApp *</label>
                   <div className="relative">
                     <Phone className="w-4 h-4 text-[#C5A869]/60 absolute left-3 top-3" />
                     <input
+                      id="booking-client-phone"
                       type="tel"
                       required
                       placeholder="+223 70 00 00 00"
@@ -216,10 +218,11 @@ export const BookingSection: React.FC<BookingSectionProps> = ({ preselectedServi
             {/* Address and location */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs text-slate-400 mb-1">Quartier à Bamako *</label>
+                <label htmlFor="booking-district" className="block text-xs text-slate-400 mb-1">Quartier à Bamako *</label>
                 <div className="relative">
                   <MapPin className="w-4 h-4 text-[#C5A869]/60 absolute left-3 top-3" />
                   <select
+                    id="booking-district"
                     value={district}
                     onChange={(e) => setDistrict(e.target.value)}
                     className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-[#060c1a] border border-[#C5A869]/25 text-white text-xs focus:border-[#C5A869] outline-none"
@@ -234,8 +237,9 @@ export const BookingSection: React.FC<BookingSectionProps> = ({ preselectedServi
               </div>
 
               <div>
-                <label className="block text-xs text-slate-400 mb-1">Repère / Rue exacte</label>
+                <label htmlFor="booking-address-details" className="block text-xs text-slate-400 mb-1">Repère / Rue exacte</label>
                 <input
+                  id="booking-address-details"
                   type="text"
                   placeholder="Ex: Près de la clinique / pharmacie..."
                   value={addressDetails}
@@ -252,8 +256,9 @@ export const BookingSection: React.FC<BookingSectionProps> = ({ preselectedServi
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs text-slate-400 mb-1">Date souhaitée</label>
+                  <label htmlFor="booking-appointment-date" className="block text-xs text-slate-400 mb-1">Date souhaitée</label>
                   <input
+                    id="booking-appointment-date"
                     type="date"
                     value={appointmentDate}
                     onChange={(e) => setAppointmentDate(e.target.value)}
@@ -262,8 +267,9 @@ export const BookingSection: React.FC<BookingSectionProps> = ({ preselectedServi
                 </div>
 
                 <div>
-                  <label className="block text-xs text-slate-400 mb-1">Créneau horaire</label>
+                  <label htmlFor="booking-time-slot" className="block text-xs text-slate-400 mb-1">Créneau horaire</label>
                   <select
+                    id="booking-time-slot"
                     value={timeSlot}
                     onChange={(e) => setTimeSlot(e.target.value)}
                     className="w-full px-3 py-2.5 rounded-xl bg-[#060c1a] border border-[#C5A869]/25 text-white text-xs focus:border-[#C5A869] outline-none"
@@ -300,8 +306,9 @@ export const BookingSection: React.FC<BookingSectionProps> = ({ preselectedServi
 
             {/* Notes */}
             <div>
-              <label className="block text-xs text-slate-400 mb-1">Remarques ou précisions (taches spécifiques, etc.)</label>
+              <label htmlFor="booking-notes" className="block text-xs text-slate-400 mb-1">Remarques ou précisions (taches spécifiques, etc.)</label>
               <textarea
+                id="booking-notes"
                 rows={2}
                 placeholder="Ex: Taches de café anciennes sur le canapé 3 places..."
                 value={notes}

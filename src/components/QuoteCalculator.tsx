@@ -512,6 +512,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                           type="button"
                           onClick={() => setTapisSizes(prev => ({ ...prev, petit: Math.max(0, prev.petit - 1) }))}
                           className="w-8 h-8 rounded-lg bg-slate-800 text-slate-200 hover:bg-slate-700 flex items-center justify-center font-bold text-sm cursor-pointer"
+                          aria-label="Diminuer la quantité : Petit Tapis (~2 x 1.5 m)"
                         >
                           <Minus className="w-4 h-4" />
                         </button>
@@ -520,6 +521,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                           type="button"
                           onClick={() => setTapisSizes(prev => ({ ...prev, petit: prev.petit + 1 }))}
                           className="w-8 h-8 rounded-lg bg-gold-gradient text-[#060B16] font-bold hover:opacity-90 flex items-center justify-center font-bold text-sm cursor-pointer"
+                          aria-label="Augmenter la quantité : Petit Tapis (~2 x 1.5 m)"
                         >
                           <Plus className="w-4 h-4" />
                         </button>
@@ -537,6 +539,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                           type="button"
                           onClick={() => setTapisSizes(prev => ({ ...prev, moyen: Math.max(0, prev.moyen - 1) }))}
                           className="w-8 h-8 rounded-lg bg-slate-800 text-slate-200 hover:bg-slate-700 flex items-center justify-center font-bold text-sm cursor-pointer"
+                          aria-label="Diminuer la quantité : Tapis Moyen (~3 x 2 m - Format Salon standard)"
                         >
                           <Minus className="w-4 h-4" />
                         </button>
@@ -545,6 +548,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                           type="button"
                           onClick={() => setTapisSizes(prev => ({ ...prev, moyen: prev.moyen + 1 }))}
                           className="w-8 h-8 rounded-lg bg-gold-gradient text-[#060B16] font-bold hover:opacity-90 flex items-center justify-center font-bold text-sm cursor-pointer"
+                          aria-label="Augmenter la quantité : Tapis Moyen (~3 x 2 m - Format Salon standard)"
                         >
                           <Plus className="w-4 h-4" />
                         </button>
@@ -562,6 +566,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                           type="button"
                           onClick={() => setTapisSizes(prev => ({ ...prev, grand: Math.max(0, prev.grand - 1) }))}
                           className="w-8 h-8 rounded-lg bg-slate-800 text-slate-200 hover:bg-slate-700 flex items-center justify-center font-bold text-sm cursor-pointer"
+                          aria-label="Diminuer la quantité : Grand Tapis Salon Royal (~4 x 3 m)"
                         >
                           <Minus className="w-4 h-4" />
                         </button>
@@ -570,6 +575,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                           type="button"
                           onClick={() => setTapisSizes(prev => ({ ...prev, grand: prev.grand + 1 }))}
                           className="w-8 h-8 rounded-lg bg-gold-gradient text-[#060B16] font-bold hover:opacity-90 flex items-center justify-center font-bold text-sm cursor-pointer"
+                          aria-label="Augmenter la quantité : Grand Tapis Salon Royal (~4 x 3 m)"
                         >
                           <Plus className="w-4 h-4" />
                         </button>
@@ -623,6 +629,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                             type="button"
                             onClick={() => setSofaItems(prev => ({ ...prev, fauteuil: Math.max(0, prev.fauteuil - 1) }))}
                             className="w-7 h-7 rounded-lg bg-slate-800 text-slate-200 hover:bg-slate-700 flex items-center justify-center cursor-pointer"
+                            aria-label="Diminuer la quantité : Fauteuil (1 place)"
                           >
                             <Minus className="w-3.5 h-3.5" />
                           </button>
@@ -631,6 +638,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                             type="button"
                             onClick={() => setSofaItems(prev => ({ ...prev, fauteuil: prev.fauteuil + 1 }))}
                             className="w-7 h-7 rounded-lg bg-gold-gradient text-[#060B16] font-bold hover:opacity-90 flex items-center justify-center cursor-pointer"
+                            aria-label="Augmenter la quantité : Fauteuil (1 place)"
                           >
                             <Plus className="w-3.5 h-3.5" />
                           </button>
@@ -648,6 +656,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                             type="button"
                             onClick={() => setSofaItems(prev => ({ ...prev, places2: Math.max(0, prev.places2 - 1) }))}
                             className="w-7 h-7 rounded-lg bg-slate-800 text-slate-200 hover:bg-slate-700 flex items-center justify-center cursor-pointer"
+                            aria-label="Diminuer la quantité : Canapé 2 places"
                           >
                             <Minus className="w-3.5 h-3.5" />
                           </button>
@@ -656,6 +665,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                             type="button"
                             onClick={() => setSofaItems(prev => ({ ...prev, places2: prev.places2 + 1 }))}
                             className="w-7 h-7 rounded-lg bg-gold-gradient text-[#060B16] font-bold hover:opacity-90 flex items-center justify-center cursor-pointer"
+                            aria-label="Augmenter la quantité : Canapé 2 places"
                           >
                             <Plus className="w-3.5 h-3.5" />
                           </button>
@@ -673,6 +683,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                             type="button"
                             onClick={() => setSofaItems(prev => ({ ...prev, places3: Math.max(0, prev.places3 - 1) }))}
                             className="w-7 h-7 rounded-lg bg-slate-800 text-slate-200 hover:bg-slate-700 flex items-center justify-center cursor-pointer"
+                            aria-label="Diminuer la quantité : Canapé 3 places"
                           >
                             <Minus className="w-3.5 h-3.5" />
                           </button>
@@ -681,6 +692,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                             type="button"
                             onClick={() => setSofaItems(prev => ({ ...prev, places3: prev.places3 + 1 }))}
                             className="w-7 h-7 rounded-lg bg-gold-gradient text-[#060B16] font-bold hover:opacity-90 flex items-center justify-center cursor-pointer"
+                            aria-label="Augmenter la quantité : Canapé 3 places"
                           >
                             <Plus className="w-3.5 h-3.5" />
                           </button>
@@ -698,6 +710,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                             type="button"
                             onClick={() => setSofaItems(prev => ({ ...prev, angle: Math.max(0, prev.angle - 1) }))}
                             className="w-7 h-7 rounded-lg bg-slate-800 text-slate-200 hover:bg-slate-700 flex items-center justify-center cursor-pointer"
+                            aria-label="Diminuer la quantité : Canapé d'Angle en L"
                           >
                             <Minus className="w-3.5 h-3.5" />
                           </button>
@@ -706,6 +719,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                             type="button"
                             onClick={() => setSofaItems(prev => ({ ...prev, angle: prev.angle + 1 }))}
                             className="w-7 h-7 rounded-lg bg-gold-gradient text-[#060B16] font-bold hover:opacity-90 flex items-center justify-center cursor-pointer"
+                            aria-label="Augmenter la quantité : Canapé d'Angle en L"
                           >
                             <Plus className="w-3.5 h-3.5" />
                           </button>
@@ -723,6 +737,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                             type="button"
                             onClick={() => setSofaItems(prev => ({ ...prev, salon5: Math.max(0, prev.salon5 - 1) }))}
                             className="w-7 h-7 rounded-lg bg-slate-800 text-slate-200 hover:bg-slate-700 flex items-center justify-center cursor-pointer"
+                            aria-label="Diminuer la quantité : Salon Complet 5 Places"
                           >
                             <Minus className="w-3.5 h-3.5" />
                           </button>
@@ -731,6 +746,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                             type="button"
                             onClick={() => setSofaItems(prev => ({ ...prev, salon5: prev.salon5 + 1 }))}
                             className="w-7 h-7 rounded-lg bg-gold-gradient text-[#060B16] font-bold hover:opacity-90 flex items-center justify-center cursor-pointer"
+                            aria-label="Augmenter la quantité : Salon Complet 5 Places"
                           >
                             <Plus className="w-3.5 h-3.5" />
                           </button>
@@ -748,6 +764,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                             type="button"
                             onClick={() => setSofaItems(prev => ({ ...prev, salon7: Math.max(0, prev.salon7 - 1) }))}
                             className="w-7 h-7 rounded-lg bg-slate-800 text-slate-200 hover:bg-slate-700 flex items-center justify-center cursor-pointer"
+                            aria-label="Diminuer la quantité : Salon Royal 7 Places"
                           >
                             <Minus className="w-3.5 h-3.5" />
                           </button>
@@ -756,6 +773,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                             type="button"
                             onClick={() => setSofaItems(prev => ({ ...prev, salon7: prev.salon7 + 1 }))}
                             className="w-7 h-7 rounded-lg bg-gold-gradient text-[#060B16] font-bold hover:opacity-90 flex items-center justify-center cursor-pointer"
+                            aria-label="Augmenter la quantité : Salon Royal 7 Places"
                           >
                             <Plus className="w-3.5 h-3.5" />
                           </button>
@@ -876,6 +894,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                             type="button"
                             onClick={() => setMatelas1Place(prev => Math.max(0, prev - 1))}
                             className="w-8 h-8 rounded-lg bg-slate-800 text-slate-200 hover:bg-slate-700 flex items-center justify-center font-bold text-sm cursor-pointer"
+                            aria-label="Diminuer la quantité : Matelas 1 place (Enfant / Célibataire)"
                           >
                             <Minus className="w-4 h-4" />
                           </button>
@@ -884,6 +903,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                             type="button"
                             onClick={() => setMatelas1Place(prev => prev + 1)}
                             className="w-8 h-8 rounded-lg bg-gold-gradient text-[#060B16] font-bold hover:opacity-90 flex items-center justify-center font-bold text-sm cursor-pointer"
+                            aria-label="Augmenter la quantité : Matelas 1 place (Enfant / Célibataire)"
                           >
                             <Plus className="w-4 h-4" />
                           </button>
@@ -900,6 +920,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                             type="button"
                             onClick={() => setMatelas2Places(prev => Math.max(0, prev - 1))}
                             className="w-8 h-8 rounded-lg bg-slate-800 text-slate-200 hover:bg-slate-700 flex items-center justify-center font-bold text-sm cursor-pointer"
+                            aria-label="Diminuer la quantité : Matelas 2 places (Queen / King Size)"
                           >
                             <Minus className="w-4 h-4" />
                           </button>
@@ -908,6 +929,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                             type="button"
                             onClick={() => setMatelas2Places(prev => prev + 1)}
                             className="w-8 h-8 rounded-lg bg-gold-gradient text-[#060B16] font-bold hover:opacity-90 flex items-center justify-center font-bold text-sm cursor-pointer"
+                            aria-label="Augmenter la quantité : Matelas 2 places (Queen / King Size)"
                           >
                             <Plus className="w-4 h-4" />
                           </button>
@@ -938,6 +960,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                             type="button"
                             onClick={() => setAutoSeats(prev => Math.max(0, prev - 1))}
                             className="w-8 h-8 rounded-lg bg-slate-800 text-slate-200 hover:bg-slate-700 flex items-center justify-center font-bold text-sm cursor-pointer"
+                            aria-label="Diminuer la quantité : Shampouinage des Sièges (Avant + Banquette)"
                           >
                             <Minus className="w-4 h-4" />
                           </button>
@@ -946,6 +969,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                             type="button"
                             onClick={() => setAutoSeats(prev => prev + 1)}
                             className="w-8 h-8 rounded-lg bg-gold-gradient text-[#060B16] font-bold hover:opacity-90 flex items-center justify-center font-bold text-sm cursor-pointer"
+                            aria-label="Augmenter la quantité : Shampouinage des Sièges (Avant + Banquette)"
                           >
                             <Plus className="w-4 h-4" />
                           </button>
@@ -962,6 +986,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                             type="button"
                             onClick={() => setAutoComplet(prev => Math.max(0, prev - 1))}
                             className="w-8 h-8 rounded-lg bg-slate-800 text-slate-200 hover:bg-slate-700 flex items-center justify-center font-bold text-sm cursor-pointer"
+                            aria-label="Diminuer la quantité : Intérieur Complet (Sièges, Moquette sol, Plafonnier & Coffre)"
                           >
                             <Minus className="w-4 h-4" />
                           </button>
@@ -970,6 +995,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                             type="button"
                             onClick={() => setAutoComplet(prev => prev + 1)}
                             className="w-8 h-8 rounded-lg bg-gold-gradient text-[#060B16] font-bold hover:opacity-90 flex items-center justify-center font-bold text-sm cursor-pointer"
+                            aria-label="Augmenter la quantité : Intérieur Complet (Sièges, Moquette sol, Plafonnier & Coffre)"
                           >
                             <Plus className="w-4 h-4" />
                           </button>
@@ -1057,10 +1083,11 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs text-slate-400 mb-1">Votre Nom & Prénom</label>
+                      <label htmlFor="quote-client-name" className="block text-xs text-slate-400 mb-1">Votre Nom & Prénom</label>
                       <div className="relative">
                         <User className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
                         <input
+                          id="quote-client-name"
                           type="text"
                           placeholder="Ex: Fatoumata Coulibaly"
                           value={clientName}
@@ -1071,10 +1098,11 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                     </div>
 
                     <div>
-                      <label className="block text-xs text-slate-400 mb-1">Téléphone (WhatsApp)</label>
+                      <label htmlFor="quote-client-phone" className="block text-xs text-slate-400 mb-1">Téléphone (WhatsApp)</label>
                       <div className="relative">
                         <Phone className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
                         <input
+                          id="quote-client-phone"
                           type="tel"
                           placeholder="+223 70 00 00 00"
                           value={clientPhone}
@@ -1087,10 +1115,11 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs text-slate-400 mb-1">Quartier à Bamako</label>
+                      <label htmlFor="quote-district" className="block text-xs text-slate-400 mb-1">Quartier à Bamako</label>
                       <div className="relative">
                         <MapPin className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
                         <select
+                          id="quote-district"
                           value={selectedDistrict}
                           onChange={(e) => setSelectedDistrict(e.target.value)}
                           className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-850 border border-slate-750 text-white text-xs focus:border-[#C5A869] outline-none"
@@ -1105,8 +1134,9 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                     </div>
 
                     <div>
-                      <label className="block text-xs text-slate-400 mb-1">Précision adresse / Rue</label>
+                      <label htmlFor="quote-address-details" className="block text-xs text-slate-400 mb-1">Précision adresse / Rue</label>
                       <input
+                        id="quote-address-details"
                         type="text"
                         placeholder="Ex: Rue 412, Porte 50 près pharmacie"
                         value={addressDetails}
@@ -1118,8 +1148,9 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs text-slate-400 mb-1">Date souhaitée</label>
+                      <label htmlFor="quote-preferred-date" className="block text-xs text-slate-400 mb-1">Date souhaitée</label>
                       <input
+                        id="quote-preferred-date"
                         type="date"
                         value={preferredDate}
                         onChange={(e) => setPreferredDate(e.target.value)}
@@ -1128,8 +1159,9 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                     </div>
 
                     <div>
-                      <label className="block text-xs text-slate-400 mb-1">Créneau horaire</label>
+                      <label htmlFor="quote-preferred-time" className="block text-xs text-slate-400 mb-1">Créneau horaire</label>
                       <select
+                        id="quote-preferred-time"
                         value={preferredTime}
                         onChange={(e) => setPreferredTime(e.target.value)}
                         className="w-full px-3 py-2.5 rounded-xl bg-slate-850 border border-slate-750 text-white text-xs focus:border-[#C5A869] outline-none"

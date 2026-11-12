@@ -1,22 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { COMPANY_INFO } from '../data/mockData';
 import { SITE_IMAGES, getActiveImage } from '../config/siteImages';
 import { Eye, Play, ExternalLink, Sparkles } from 'lucide-react';
 
 export const TikTokSection: React.FC = () => {
   const featuredVideoUrl = "https://www.tiktok.com/@luxcleanmali223/video/7652775796922141972?is_from_webapp=1&sender_device=pc&web_id=7685441021673178644";
-  const featuredVideoId = "7652775796922141972";
 
-  // Load TikTok embed script dynamically for native embed support
-  useEffect(() => {
-    const existingScript = document.querySelector('script[src="https://www.tiktok.com/embed.js"]');
-    if (!existingScript) {
-      const script = document.createElement('script');
-      script.src = 'https://www.tiktok.com/embed.js';
-      script.async = true;
-      document.body.appendChild(script);
-    }
-  }, []);
+  // Les cartes vidéo ci-dessous sont des miniatures qui renvoient vers TikTok
+  // (pas d'embed natif), donc aucun script externe n'est nécessaire ici —
+  // ça évite une requête réseau inutile à chaque visite.
 
   // Real stats from official TikTok account @luxcleanmali223
   const featuredStats = {

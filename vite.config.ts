@@ -6,8 +6,8 @@ import {defineConfig, Plugin} from 'vite';
 
 function imagePersistencePlugin(): Plugin {
   const SLOT_TO_FILE: Record<string, string> = {
-    brand_logo: 'luxclean-logo.jpg',
-    hero_main: 'hero-action.png',
+    brand_logo: 'luxclean-logo-optimized.jpg',
+    hero_main: 'hero-action-optimized.jpg',
     ba_canape_before: 'sofa-before-clean.jpg',
     ba_canape_after: 'sofa-after-clean.jpg',
     ba_tapis_before: 'tapis-before.jpg',
@@ -21,7 +21,7 @@ function imagePersistencePlugin(): Plugin {
     service_bureau: 'bureau-after.jpg',
     service_canapes: 'sofa-after-clean.jpg',
     service_matelas: 'matelas-clean.jpg',
-    service_auto: 'interieur-auto.png',
+    service_auto: 'interieur-auto.jpg',
     tiktok_1: 'tiktok-video-thumbnail.jpg',
     tiktok_2: 'tiktok-video-thumbnail-2.jpg',
     tiktok_3: 'tiktok-video-thumbnail-3.jpg',

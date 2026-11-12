@@ -172,7 +172,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenQuote }) =>
                 rel="noopener noreferrer"
                 className="text-center text-xs text-slate-300 py-1"
               >
-                Suivez-nous sur TikTok : <span className="text-[#C5A869] font-bold">{COMPANY_INFO.tiktokHandle}</span>
+                Suivez-nous : <span className="text-[#C5A869] font-bold">{COMPANY_INFO.tiktokHandle}</span>
               </a>
               <SocialLinks className="justify-center pt-1" />
             </div>

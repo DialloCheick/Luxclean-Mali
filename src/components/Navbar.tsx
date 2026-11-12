@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { COMPANY_INFO } from '../data/mockData';
 import { BrandLogo } from './BrandLogo';
+import { SocialLinks } from './SocialLinks';
 import { Phone, Menu, X, Calendar, Calculator } from 'lucide-react';
 
 interface NavbarProps {
@@ -54,6 +55,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenQuote }) =>
             >
               <span className="font-semibold text-[#C5A869]">TikTok:</span> {COMPANY_INFO.tiktokHandle}
             </a>
+            <SocialLinks iconClassName="w-3.5 h-3.5" className="hidden md:flex gap-1.5 [&>a]:w-6 [&>a]:h-6" />
           </div>
         </div>
       </div>
@@ -172,6 +174,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenQuote }) =>
               >
                 Suivez-nous sur TikTok : <span className="text-[#C5A869] font-bold">{COMPANY_INFO.tiktokHandle}</span>
               </a>
+              <SocialLinks className="justify-center pt-1" />
             </div>
           </div>
         )}

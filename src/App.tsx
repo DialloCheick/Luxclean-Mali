@@ -11,9 +11,16 @@ import { Testimonials } from './components/Testimonials';
 import { FAQ } from './components/FAQ';
 import { Footer } from './components/Footer';
 import { MobileBottomBar } from './components/MobileBottomBar';
+import { FloatingWhatsApp } from './components/FloatingWhatsApp';
 import { PreDeploymentMediaManager } from './components/PreDeploymentMediaManager';
 import { initImageStore } from './config/siteImages';
 import { ServiceItem } from './types';
+
+// The media manager is a local authoring tool only (it writes files through a
+// Vite dev-server middleware that doesn't exist once the site is built and
+// deployed). Gating it behind DEV mode keeps it out of the production bundle
+// and means the Alt+M / ?media=1 triggers simply don't exist for visitors.
+const MEDIA_MANAGER_ENABLED = import.meta.env.DEV;
 
 export default function App() {
   const [selectedServiceForBooking, setSelectedServiceForBooking] = useState<string | undefined>(undefined);
@@ -27,7 +34,10 @@ export default function App() {
   }, []);
 
   // Keyboard shortcut (Alt + M) or URL param (?media=1) to open media manager
+  // — dev-only, see MEDIA_MANAGER_ENABLED above.
   useEffect(() => {
+    if (!MEDIA_MANAGER_ENABLED) return;
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.altKey || e.metaKey) && (e.key === 'm' || e.key === 'M')) {
         e.preventDefault();
@@ -120,12 +130,17 @@ export default function App() {
         onOpenBooking={() => scrollToSection('reservation')}
       />
 
-      {/* Hidden Pre-Deployment Media Manager Modal */}
-      <PreDeploymentMediaManager
-        isOpen={isMediaManagerOpen}
-        onClose={() => setIsMediaManagerOpen(false)}
-        onImagesUpdated={handleImagesUpdated}
-      />
+      {/* Desktop floating WhatsApp CTA */}
+      <FloatingWhatsApp />
+
+      {/* Hidden Pre-Deployment Media Manager Modal (dev-only, see MEDIA_MANAGER_ENABLED) */}
+      {MEDIA_MANAGER_ENABLED && (
+        <PreDeploymentMediaManager
+          isOpen={isMediaManagerOpen}
+          onClose={() => setIsMediaManagerOpen(false)}
+          onImagesUpdated={handleImagesUpdated}
+        />
+      )}
     </div>
   );
 }

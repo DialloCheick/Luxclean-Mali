@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Sparkles, ArrowRight, Clock, CheckCircle2, MessageCircle, Star, MapPin, Award } from 'lucide-react';
 import { COMPANY_INFO } from '../data/mockData';
 import { SITE_IMAGES, getActiveImage } from '../config/siteImages';
-import heroMainImg from '../assets/images/regenerated_image_1789578624366.png';
+import heroMainImg from '../assets/images/hero-action-optimized.jpg';
 
 interface HeroProps {
   onOpenQuote: () => void;
@@ -166,6 +166,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenQuote, onOpenBooking }) => {
                     alt="Brossage mécanique haute puissance sur canapé et tissus à Bamako - Lux Clean Mali"
                     className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
                     referrerPolicy="no-referrer"
+                    loading="eager"
+                    fetchPriority="high"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#081226] via-[#081226]/40 to-transparent"></div>
 

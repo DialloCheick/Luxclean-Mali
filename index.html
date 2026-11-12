@@ -17,7 +17,9 @@
     <meta name="twitter:description" content="Service premium de nettoyage professionnel de tapis, moquettes et canapés à Bamako. Devis gratuit et intervention rapide 7j/7." />
     <meta name="twitter:image" content="https://luxcleanmali.com/luxclean-logo.jpg" />
     <link rel="icon" type="image/jpeg" href="/luxclean-logo.jpg" />
-    <link rel="apple-touch-icon" href="/luxclean-logo.jpg" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#060b18" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -53,9 +55,20 @@
       ],
       "sameAs": [
         "https://www.tiktok.com/@luxcleanmali223"
-      ]
+      ],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5.0",
+        "reviewCount": "4"
+      }
     }
     </script>
+    <!--
+      Note pour Cheick : si vous ajoutez des témoignages dans
+      src/data/mockData.ts (TESTIMONIALS), pensez à mettre à jour
+      reviewCount (et ratingValue si la moyenne change) ci-dessus pour
+      rester exact vis-à-vis de Google.
+    -->
   </head>
   <body class="bg-[#060b18] text-slate-100 antialiased selection:bg-[#C5A869] selection:text-[#060B16]">
     <div id="root"></div>

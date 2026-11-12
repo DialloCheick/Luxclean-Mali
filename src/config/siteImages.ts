@@ -14,7 +14,7 @@
  * =========================================================================
  */
 
-import heroMainImg from '../assets/images/regenerated_image_1789578624366.png';
+import heroMainImg from '../assets/images/hero-action-optimized.jpg';
 
 export interface ImageConfigItem {
   id: string;

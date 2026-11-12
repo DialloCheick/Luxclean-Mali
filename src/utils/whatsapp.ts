@@ -12,6 +12,8 @@ export interface WhatsAppQuotePayload {
   totalEstimateFCFA: number;
   paymentMethod?: string;
   customNotes?: string;
+  dirtTierLabel?: string;
+  dirtJustification?: string;
 }
 
 export function generateWhatsAppQuoteLink(payload: WhatsAppQuotePayload): string {
@@ -44,8 +46,16 @@ export function generateWhatsAppQuoteLink(payload: WhatsAppQuotePayload): string
     payload.optionsSummary.forEach(opt => lines.push(` • ${opt}`));
   }
 
+  if (payload.dirtTierLabel) {
+    lines.push(`🧹 *État constaté :* ${payload.dirtTierLabel}`);
+    if (payload.dirtJustification) {
+      lines.push(`   _(estimation IA sur photo : ${payload.dirtJustification})_`);
+    }
+  }
+
   lines.push(``);
   lines.push(`💰 *Total Estimé :* *${payload.totalEstimateFCFA.toLocaleString('fr-FR')} FCFA*`);
+  lines.push(`_(Estimation indicative — merci de joindre vos photos ici pour confirmation du prix final)_`);
 
   if (payload.paymentMethod) {
     lines.push(`💳 *Moyen de paiement souhaité :* ${payload.paymentMethod}`);

@@ -176,6 +176,8 @@ export const BeforeAfterGallery: React.FC<BeforeAfterGalleryProps> = () => {
               alt={`${currentItem.title} après nettoyage`}
               className="absolute inset-0 w-full h-full object-cover pointer-events-none"
               referrerPolicy="no-referrer"
+              loading="lazy"
+              decoding="async"
             />
 
             {/* After Tag */}

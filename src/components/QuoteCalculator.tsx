@@ -1,6 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { BAMAKO_DISTRICTS, PAYMENT_METHODS, COMPANY_INFO } from '../data/mockData';
+import { BAMAKO_DISTRICTS, PAYMENT_METHODS, COMPANY_INFO, DIRT_SEVERITY_TIERS } from '../data/mockData';
 import { formatFCFA, generateWhatsAppQuoteLink } from '../utils/whatsapp';
+import { DirtSeverity } from '../types';
+import { PhotoConditionEstimator } from './PhotoConditionEstimator';
 import {
   Calculator,
   MessageCircle,
@@ -72,6 +74,12 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
   // Auto
   const [autoSeats, setAutoSeats] = useState<number>(0);
   const [autoComplet, setAutoComplet] = useState<number>(0);
+
+  // Dirt/condition severity (from photo AI estimate or manual self-selection)
+  const [dirtTier, setDirtTier] = useState<DirtSeverity>('leger');
+  const [dirtMeta, setDirtMeta] = useState<{ source: 'ai' | 'manual'; justification?: string; confidence?: number }>({
+    source: 'manual',
+  });
 
   // Additional options
   const [options, setOptions] = useState({
@@ -231,10 +239,18 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
       transportCost = 2000;
     }
 
-    const totalEstimate = subtotal + optionsCost + transportCost;
+    // Dirt/condition severity surcharge — the base prices above assume routine
+    // upkeep. A more soiled item costs more to treat, which is exactly the
+    // "prices aren't fixed" problem the photo estimator exists to solve.
+    const dirtTierConfig = DIRT_SEVERITY_TIERS.find((t) => t.id === dirtTier) ?? DIRT_SEVERITY_TIERS[0];
+    const dirtSurcharge = Math.round(subtotal * (dirtTierConfig.multiplier - 1));
+
+    const totalEstimate = subtotal + dirtSurcharge + optionsCost + transportCost;
 
     return {
       subtotal,
+      dirtSurcharge,
+      dirtTierConfig,
       optionsCost,
       transportCost,
       totalEstimate,
@@ -253,6 +269,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
     autoComplet,
     options,
     activeTab,
+    dirtTier,
   ]);
 
   // Handle WhatsApp Link trigger
@@ -273,6 +290,8 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
       totalEstimateFCFA: quoteCalculation.totalEstimate,
       paymentMethod: selectedPayment,
       customNotes: customNotes || undefined,
+      dirtTierLabel: quoteCalculation.dirtTierConfig.id !== 'leger' ? quoteCalculation.dirtTierConfig.label : undefined,
+      dirtJustification: dirtMeta.source === 'ai' ? dirtMeta.justification : undefined,
     });
 
     const newWindow = window.open(link, '_blank', 'noopener,noreferrer');
@@ -298,6 +317,8 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
     setMatelas2Places(0);
     setAutoSeats(0);
     setAutoComplet(0);
+    setDirtTier('leger');
+    setDirtMeta({ source: 'manual' });
     setIsSubmitted(false);
   };
 
@@ -1018,6 +1039,16 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                   </div>
                 </div>
 
+                {/* Photo-based dirt/condition estimator */}
+                <PhotoConditionEstimator
+                  category={activeTab}
+                  selectedTier={dirtTier}
+                  onSelectTier={(tier, meta) => {
+                    setDirtTier(tier);
+                    setDirtMeta(meta);
+                  }}
+                />
+
                 {/* Bamako District & Client Details */}
                 <div className="pt-4 border-t border-slate-800 space-y-3">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
@@ -1181,6 +1212,14 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                     ))
                   )}
 
+                  {/* Dirt severity surcharge */}
+                  {quoteCalculation.dirtSurcharge > 0 && (
+                    <div className="flex justify-between items-center text-amber-300 py-1.5 border-b border-slate-800/80">
+                      <span>État : {quoteCalculation.dirtTierConfig.shortLabel}</span>
+                      <span className="font-bold">+{formatFCFA(quoteCalculation.dirtSurcharge)}</span>
+                    </div>
+                  )}
+
                   {/* Options */}
                   {quoteCalculation.optionsCost > 0 && (
                     <div className="flex justify-between items-center text-[#DFC792] py-1.5 border-b border-slate-800/80">
@@ -1208,6 +1247,9 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                   </div>
                   <p className="text-[11px] text-slate-300">
                     Règlement via <strong className="text-[#DFC792]">{selectedPayment}</strong> ou espèces après inspection.
+                  </p>
+                  <p className="text-[10px] text-slate-500 italic">
+                    Estimation indicative — le prix définitif est confirmé par notre équipe après inspection de vos photos.
                   </p>
                 </div>
 

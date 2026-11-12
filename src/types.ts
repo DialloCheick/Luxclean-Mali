@@ -61,6 +61,24 @@ export interface BamakoDistrict {
   zone: string; // "Rive Gauche" | "Rive Droite"
 }
 
+export type DirtSeverity = 'leger' | 'modere' | 'severe';
+
+export interface DirtSeverityTier {
+  id: DirtSeverity;
+  label: string;
+  shortLabel: string;
+  multiplier: number;
+  description: string;
+  colorClass: string;
+}
+
+export interface PhotoEstimateResult {
+  tier: DirtSeverity;
+  confidence: number; // 0 to 1
+  justification: string; // short French explanation shown to the client
+  source: 'ai' | 'manual'; // whether the AI produced it or the client self-selected
+}
+
 export type PaymentMethodId = 'orange_money' | 'wave' | 'moov_money' | 'cash';
 
 export interface PaymentMethod {

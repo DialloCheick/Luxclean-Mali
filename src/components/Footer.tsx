@@ -1,6 +1,7 @@
 import React from 'react';
 import { COMPANY_INFO, BAMAKO_DISTRICTS } from '../data/mockData';
 import { BrandLogo } from './BrandLogo';
+import { SocialLinks } from './SocialLinks';
 import { MapPin, Clock, Mail } from 'lucide-react';
 
 interface FooterProps {
@@ -126,6 +127,7 @@ export const Footer: React.FC<FooterProps> = () => {
               >
                 TikTok : {COMPANY_INFO.tiktokHandle}
               </a>
+              <SocialLinks className="pt-1" />
             </div>
           </div>
 

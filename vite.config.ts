@@ -71,9 +71,9 @@ function imagePersistencePlugin(): Plugin {
 
             // Also keep companion files synchronized
             if (slotId === 'hero_main') {
-              const altPath = path.join(publicDir, 'regenerated_image_1789578624366.png');
+              const altPath = path.join(publicDir, 'hero-action-optimized.jpg');
               fs.writeFileSync(altPath, buffer);
-              const assetHeroPath = path.resolve(process.cwd(), 'src/assets/images/regenerated_image_1789578624366.png');
+              const assetHeroPath = path.resolve(process.cwd(), 'src/assets/images/hero-action-optimized.jpg');
               if (fs.existsSync(path.dirname(assetHeroPath))) {
                 fs.writeFileSync(assetHeroPath, buffer);
               }

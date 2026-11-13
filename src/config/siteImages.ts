@@ -67,9 +67,9 @@ export const SITE_IMAGES = {
 
   // 4. Catalogue des Prestations & Services
   services: {
-    tapisMaison: '/tapis-after.jpg',
-    moquetteMosquee: '/mosquee-after.jpg',
-    moquetteBureau: '/bureau-after.jpg',
+    tapisMaison: '/tapis-service.jpg',
+    moquetteMosquee: '/mosquee-service.jpg',
+    moquetteBureau: '/bureau-service.jpg',
     canapesSalons: '/sofa-after-clean.jpg',
     matelasLiterie: '/matelas-clean.jpg',
     interieurAuto: '/interieur-auto.jpg',

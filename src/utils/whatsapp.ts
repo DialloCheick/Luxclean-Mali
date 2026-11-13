@@ -7,20 +7,20 @@ export interface WhatsAppQuotePayload {
   addressDetails?: string;
   selectedDate?: string;
   preferredTime?: string;
+  category?: string;
   serviceSummary: string;
   optionsSummary?: string[];
   totalEstimateFCFA: number;
   paymentMethod?: string;
   customNotes?: string;
-  dirtTierLabel?: string;
-  dirtJustification?: string;
+  photoCount?: number;
 }
 
 export function generateWhatsAppQuoteLink(payload: WhatsAppQuotePayload): string {
   const phone = COMPANY_INFO.whatsappNumber; // e.g. 22376543210
 
   const lines: string[] = [
-    `✨ *NOUVELLE DEMANDE DE DEVIS / RÉSERVATION - LUX CLEAN MALI* ✨`,
+    `✨ *NOUVELLE DEMANDE DE DEVIS - LUX CLEAN MALI* ✨`,
     `--------------------------------------`,
   ];
 
@@ -30,6 +30,9 @@ export function generateWhatsAppQuoteLink(payload: WhatsAppQuotePayload): string
   if (payload.clientPhone) {
     lines.push(`📞 *Téléphone :* ${payload.clientPhone}`);
   }
+  if (payload.category) {
+    lines.push(`🏷️ *Catégorie :* ${payload.category}`);
+  }
   if (payload.district) {
     lines.push(`📍 *Quartier (Bamako) :* ${payload.district}${payload.addressDetails ? ` (${payload.addressDetails})` : ''}`);
   }
@@ -38,24 +41,22 @@ export function generateWhatsAppQuoteLink(payload: WhatsAppQuotePayload): string
   }
 
   lines.push(``);
-  lines.push(`📋 *Détail des prestations :*`);
+  lines.push(`📋 *Détail de la demande :*`);
   lines.push(payload.serviceSummary);
 
   if (payload.optionsSummary && payload.optionsSummary.length > 0) {
-    lines.push(`⚙️ *Options sélectionnées :*`);
+    lines.push(`⚙️ *Options souhaitées :*`);
     payload.optionsSummary.forEach(opt => lines.push(` • ${opt}`));
   }
 
-  if (payload.dirtTierLabel) {
-    lines.push(`🧹 *État constaté :* ${payload.dirtTierLabel}`);
-    if (payload.dirtJustification) {
-      lines.push(`   _(estimation IA sur photo : ${payload.dirtJustification})_`);
-    }
-  }
-
   lines.push(``);
-  lines.push(`💰 *Total Estimé :* *${payload.totalEstimateFCFA.toLocaleString('fr-FR')} FCFA*`);
-  lines.push(`_(Estimation indicative — merci de joindre vos photos ici pour confirmation du prix final)_`);
+  lines.push(`🧮 *Estimation simulée (non-finale) :* *${payload.totalEstimateFCFA.toLocaleString('fr-FR')} FCFA*`);
+  lines.push(`_(Ceci est une simulation automatique du site, pas un prix final. Merci de me confirmer le prix définitif après avoir vu les photos ci-dessous.)_`);
+
+  if (payload.photoCount && payload.photoCount > 0) {
+    lines.push(``);
+    lines.push(`📸 *${payload.photoCount} photo${payload.photoCount > 1 ? 's' : ''} sélectionnée${payload.photoCount > 1 ? 's' : ''} sur le site* — je vais les joindre juste ici dans cette conversation.`);
+  }
 
   if (payload.paymentMethod) {
     lines.push(`💳 *Moyen de paiement souhaité :* ${payload.paymentMethod}`);
@@ -66,7 +67,7 @@ export function generateWhatsAppQuoteLink(payload: WhatsAppQuotePayload): string
   }
 
   lines.push(`--------------------------------------`);
-  lines.push(`Bonjour Lux Clean Mali, merci de me confirmer la disponibilité et le rendez-vous.`);
+  lines.push(`Bonjour Lux Clean Mali, voici ma demande. Merci de me confirmer le prix définitif et la disponibilité.`);
 
   const text = encodeURIComponent(lines.join('\n'));
   return `https://wa.me/${phone}?text=${text}`;

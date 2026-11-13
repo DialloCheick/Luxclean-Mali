@@ -1,8 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { BAMAKO_DISTRICTS, PAYMENT_METHODS, COMPANY_INFO, DIRT_SEVERITY_TIERS } from '../data/mockData';
+import { BAMAKO_DISTRICTS, PAYMENT_METHODS, COMPANY_INFO } from '../data/mockData';
 import { formatFCFA, generateWhatsAppQuoteLink } from '../utils/whatsapp';
-import { DirtSeverity } from '../types';
-import { PhotoConditionEstimator } from './PhotoConditionEstimator';
+import { CompressedImage } from '../utils/image';
+import { QuotePhotoUploader } from './QuotePhotoUploader';
 import {
   Calculator,
   MessageCircle,
@@ -19,8 +19,25 @@ import {
   CheckCircle2,
   Share2,
   RefreshCw,
-  Clock
+  Clock,
+  Home,
+  Building2,
+  Landmark,
+  AlertTriangle
 } from 'lucide-react';
+
+// Which "catégorie" (maison / mosquée / bureau) each item tab belongs to.
+// Derived automatically from the existing tab selection instead of adding a
+// second, redundant selector — the client already tells us this by picking
+// "Tapis", "Mosquées", "Bureaux", etc.
+const TAB_CATEGORY: Record<string, { label: string; icon: typeof Home }> = {
+  tapis: { label: 'Maison', icon: Home },
+  canapes: { label: 'Maison', icon: Home },
+  matelas: { label: 'Maison', icon: Home },
+  auto: { label: 'Maison', icon: Home },
+  moquette_mosquee: { label: 'Mosquée', icon: Landmark },
+  moquette_bureau: { label: 'Bureau / Entreprise', icon: Building2 },
+};
 
 interface QuoteCalculatorProps {
   initialCategory?: string;
@@ -75,11 +92,12 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
   const [autoSeats, setAutoSeats] = useState<number>(0);
   const [autoComplet, setAutoComplet] = useState<number>(0);
 
-  // Dirt/condition severity (from photo AI estimate or manual self-selection)
-  const [dirtTier, setDirtTier] = useState<DirtSeverity>('leger');
-  const [dirtMeta, setDirtMeta] = useState<{ source: 'ai' | 'manual'; justification?: string; confidence?: number }>({
-    source: 'manual',
-  });
+  // Photos of the client's item(s) — collected for manual review only.
+  // Never sent to any AI or backend, never affects the simulated price:
+  // this is purely so the client can show Cheick what they have. Since a
+  // wa.me link can only pre-fill text (no file attachment is possible),
+  // the client is told to attach these manually once WhatsApp opens.
+  const [quotePhotos, setQuotePhotos] = useState<CompressedImage[]>([]);
 
   // Additional options
   const [options, setOptions] = useState({
@@ -226,7 +244,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
     }
     if (options.luxuryFragrance) {
       optionsCost += 1500;
-      selectedOptionsList.push('Parfumage signature Oud/Musc ou Fraîcheur (+1 500 F)');
+      selectedOptionsList.push('Parfumage délicat & agréable (+1 500 F)');
     }
     if (options.expressDrying) {
       optionsCost += 2000;
@@ -239,18 +257,10 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
       transportCost = 2000;
     }
 
-    // Dirt/condition severity surcharge — the base prices above assume routine
-    // upkeep. A more soiled item costs more to treat, which is exactly the
-    // "prices aren't fixed" problem the photo estimator exists to solve.
-    const dirtTierConfig = DIRT_SEVERITY_TIERS.find((t) => t.id === dirtTier) ?? DIRT_SEVERITY_TIERS[0];
-    const dirtSurcharge = Math.round(subtotal * (dirtTierConfig.multiplier - 1));
-
-    const totalEstimate = subtotal + dirtSurcharge + optionsCost + transportCost;
+    const totalEstimate = subtotal + optionsCost + transportCost;
 
     return {
       subtotal,
-      dirtSurcharge,
-      dirtTierConfig,
       optionsCost,
       transportCost,
       totalEstimate,
@@ -269,7 +279,6 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
     autoComplet,
     options,
     activeTab,
-    dirtTier,
   ]);
 
   // Handle WhatsApp Link trigger
@@ -281,6 +290,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
     const link = generateWhatsAppQuoteLink({
       clientName: clientName || undefined,
       clientPhone: clientPhone || undefined,
+      category: TAB_CATEGORY[activeTab]?.label,
       district: selectedDistrict,
       addressDetails: addressDetails || undefined,
       selectedDate: preferredDate || undefined,
@@ -290,8 +300,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
       totalEstimateFCFA: quoteCalculation.totalEstimate,
       paymentMethod: selectedPayment,
       customNotes: customNotes || undefined,
-      dirtTierLabel: quoteCalculation.dirtTierConfig.id !== 'leger' ? quoteCalculation.dirtTierConfig.label : undefined,
-      dirtJustification: dirtMeta.source === 'ai' ? dirtMeta.justification : undefined,
+      photoCount: quotePhotos.length,
     });
 
     const newWindow = window.open(link, '_blank', 'noopener,noreferrer');
@@ -317,8 +326,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
     setMatelas2Places(0);
     setAutoSeats(0);
     setAutoComplet(0);
-    setDirtTier('leger');
-    setDirtMeta({ source: 'manual' });
+    setQuotePhotos([]);
     setIsSubmitted(false);
   };
 
@@ -330,13 +338,13 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
         <div className="text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#0d1c3a] text-[#DFC792] border border-[#C5A869]/25 mb-3">
             <Calculator className="w-3.5 h-3.5 text-[#C5A869]" />
-            <span>Simulateur Transparent • Tarification Officielle FCFA</span>
+            <span>Simulateur de Devis • Prix Final Confirmé sur WhatsApp</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold font-display text-white tracking-tight">
-            Système de Devis en Ligne <span className="text-gold-gradient">Immédiat</span>
+            Système de Devis en Ligne <span className="text-gold-gradient">Simulé</span>
           </h2>
           <p className="mt-3 text-base text-slate-300">
-            Configurez vos besoins en quelques clics, visualisez l'estimation exacte en Franc CFA et transférez instantanément votre demande à notre service client sur WhatsApp.
+            Configurez vos besoins et ajoutez vos photos en quelques clics. Ce que vous voyez ici est une <strong className="text-[#DFC792]">estimation simulée</strong>, pas un prix final : notre équipe vous recontacte sur WhatsApp avec le prix définitif après avoir étudié votre demande.
           </p>
         </div>
 
@@ -349,19 +357,23 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
 
             <div>
               <span className="px-3.5 py-1 rounded-full text-xs font-extrabold bg-[#0d1c3a] text-[#DFC792] border border-[#C5A869]/25">
-                Réf. Devis : {submittedQuoteCode}
+                Réf. Demande : {submittedQuoteCode}
               </span>
               <h3 className="text-2xl font-bold font-display text-white mt-3">
-                Votre Devis a été Enregistré avec Succès !
+                Votre Demande a bien été Simulée !
               </h3>
               <p className="text-sm text-slate-300 mt-2">
-                Merci {clientName || 'cher client'}. Notre équipe à Bamako a bien reçu votre demande pour le quartier{' '}
-                <strong className="text-[#DFC792]">{selectedDistrict}</strong>.
+                Merci {clientName || 'cher client'}. Ceci n'est pas encore un prix final : notre équipe à Bamako va étudier votre demande pour le quartier{' '}
+                <strong className="text-[#DFC792]">{selectedDistrict}</strong> et vous recontacter sur WhatsApp avec le prix définitif.
               </p>
             </div>
 
             {/* Receipt Summary Box */}
             <div className="p-5 rounded-2xl bg-[#060b17] border border-[#C5A869]/20 text-left space-y-3">
+              <div className="flex justify-between items-center text-sm border-b border-slate-800 pb-2">
+                <span className="text-slate-400">Catégorie :</span>
+                <span className="text-white font-medium">{TAB_CATEGORY[activeTab]?.label}</span>
+              </div>
               <div className="flex justify-between items-center text-sm border-b border-slate-800 pb-2">
                 <span className="text-slate-400">Date souhaitée :</span>
                 <span className="text-white font-medium">{preferredDate || 'Dès que possible'} ({preferredTime})</span>
@@ -371,22 +383,28 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                 <span className="text-[#DFC792] font-bold">{selectedPayment}</span>
               </div>
               <div className="flex justify-between items-center text-base pt-1">
-                <span className="text-white font-bold">Montant Total Estimé :</span>
+                <span className="text-white font-bold">Estimation Simulée (non-finale) :</span>
                 <span className="text-2xl font-black text-[#C5A869] font-display">
                   {formatFCFA(quoteCalculation.totalEstimate)}
                 </span>
               </div>
             </div>
 
-            {/* Instruction for Payment & WhatsApp */}
+            {/* Instruction for WhatsApp & manual photo attachment */}
             <div className="p-4 rounded-xl bg-[#0d1c3a] border border-[#C5A869]/25 text-xs text-slate-200 text-left space-y-2">
               <p className="font-bold text-[#DFC792] flex items-center gap-1.5">
                 <ShieldCheck className="w-4 h-4 text-[#C5A869]" />
-                Instructions de confirmation & prise en charge :
+                Prochaine étape :
               </p>
               <p>
-                Pour accélérer le passage de nos techniciens à votre adresse, transmettez dès maintenant cette référence <strong>{submittedQuoteCode}</strong> sur notre WhatsApp officiel.
+                Cliquez sur le bouton WhatsApp ci-dessous en gardant la référence <strong>{submittedQuoteCode}</strong>. Nous vous répondrons avec le <strong className="text-[#DFC792]">prix définitif</strong> après avoir vu vos informations{quotePhotos.length > 0 ? ' et vos photos' : ''}.
               </p>
+              {quotePhotos.length > 0 && (
+                <p className="flex items-start gap-1.5 text-amber-200">
+                  <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                  <span>WhatsApp n'ouvre la conversation qu'avec le texte pré-rempli : pensez à joindre vous-même vos {quotePhotos.length} photo{quotePhotos.length > 1 ? 's' : ''} dans la conversation qui s'ouvre.</span>
+                </p>
+              )}
             </div>
 
             {/* Direct WhatsApp button */}
@@ -414,7 +432,22 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
             
             {/* Left Column: Category selector & items (8 cols) */}
             <div className="lg:col-span-7 space-y-6">
-              
+
+              {/* Catégorie (dérivée automatiquement de l'onglet choisi ci-dessous) */}
+              <div className="flex items-center gap-2 text-xs">
+                <span className="text-slate-400">Catégorie détectée :</span>
+                {(() => {
+                  const cat = TAB_CATEGORY[activeTab];
+                  const Icon = cat?.icon ?? Home;
+                  return (
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#0d1c3a] text-[#DFC792] border border-[#C5A869]/30 font-bold">
+                      <Icon className="w-3.5 h-3.5" />
+                      {cat?.label}
+                    </span>
+                  );
+                })()}
+              </div>
+
               {/* Category Tabs */}
               <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5 p-1.5 rounded-2xl bg-[#09142b] border border-[#C5A869]/25 text-xs font-semibold">
                 <button
@@ -789,7 +822,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                     <div className="flex items-center justify-between pb-3 border-b border-slate-800">
                       <div>
                         <h4 className="font-bold text-white text-base">Moquettes de Mosquées (Lieux de Culte)</h4>
-                        <p className="text-xs text-slate-400">Tarif solidaire dégressif + Parfumage Musc & Oud inclus</p>
+                        <p className="text-xs text-slate-400">Tarif solidaire dégressif + désinfection certifiée incluse</p>
                       </div>
                       <span className="text-xs px-2.5 py-1 rounded-full bg-[#C5A869]/15 text-[#C5A869] border border-[#C5A869]/30">
                         Désinfection offerte
@@ -1045,7 +1078,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                         className="w-4 h-4 rounded accent-[#C5A869]"
                       />
                       <div className="text-xs">
-                        <span className="font-semibold text-white block">Parfumage signature Oud/Musc</span>
+                        <span className="font-semibold text-white block">Parfumage délicat & agréable</span>
                         <span className="text-slate-400">+1 500 FCFA</span>
                       </div>
                     </label>
@@ -1065,14 +1098,11 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                   </div>
                 </div>
 
-                {/* Photo-based dirt/condition estimator */}
-                <PhotoConditionEstimator
-                  category={activeTab}
-                  selectedTier={dirtTier}
-                  onSelectTier={(tier, meta) => {
-                    setDirtTier(tier);
-                    setDirtMeta(meta);
-                  }}
+                {/* Photo upload — collected for manual review, never auto-sent */}
+                <QuotePhotoUploader
+                  photos={quotePhotos}
+                  onChange={setQuotePhotos}
+                  maxPhotos={6}
                 />
 
                 {/* Bamako District & Client Details */}
@@ -1244,14 +1274,6 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                     ))
                   )}
 
-                  {/* Dirt severity surcharge */}
-                  {quoteCalculation.dirtSurcharge > 0 && (
-                    <div className="flex justify-between items-center text-amber-300 py-1.5 border-b border-slate-800/80">
-                      <span>État : {quoteCalculation.dirtTierConfig.shortLabel}</span>
-                      <span className="font-bold">+{formatFCFA(quoteCalculation.dirtSurcharge)}</span>
-                    </div>
-                  )}
-
                   {/* Options */}
                   {quoteCalculation.optionsCost > 0 && (
                     <div className="flex justify-between items-center text-[#DFC792] py-1.5 border-b border-slate-800/80">
@@ -1272,18 +1294,26 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                 {/* Total box */}
                 <div className="p-4 rounded-xl bg-[#060b17] border border-[#C5A869]/25 space-y-2">
                   <div className="flex justify-between items-baseline">
-                    <span className="text-xs font-bold uppercase tracking-wider text-slate-300">Total Devis Estimé</span>
+                    <span className="text-xs font-bold uppercase tracking-wider text-slate-300">Estimation Simulée</span>
                     <span className="text-2xl sm:text-3xl font-black text-[#C5A869] font-display">
                       {formatFCFA(quoteCalculation.totalEstimate)}
                     </span>
                   </div>
                   <p className="text-[11px] text-slate-300">
-                    Règlement via <strong className="text-[#DFC792]">{selectedPayment}</strong> ou espèces après inspection.
+                    Règlement via <strong className="text-[#DFC792]">{selectedPayment}</strong> ou espèces, à confirmer avec notre équipe.
                   </p>
                   <p className="text-[10px] text-slate-500 italic">
-                    Estimation indicative — le prix définitif est confirmé par notre équipe après inspection de vos photos.
+                    Ceci n'est pas un prix final. Le site simule un ordre de grandeur — le prix définitif vous est communiqué par notre équipe sur WhatsApp, après étude de vos informations et de vos photos.
                   </p>
                 </div>
+
+                {/* Manual photo-attachment reminder — wa.me links cannot attach files automatically */}
+                {quotePhotos.length > 0 && (
+                  <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-[11px] text-amber-200 flex items-start gap-2">
+                    <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+                    <span>WhatsApp ouvrira la conversation avec votre message, mais vos {quotePhotos.length} photo{quotePhotos.length > 1 ? 's' : ''} doivent être jointes vous-même une fois la conversation ouverte.</span>
+                  </div>
+                )}
 
                 {/* Primary WhatsApp Action */}
                 <div className="space-y-3">
@@ -1294,7 +1324,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                     className="w-full py-4 px-4 rounded-xl bg-gold-gradient text-[#060B16] font-black text-sm shadow-xl shadow-black/40 transition-all flex items-center justify-center gap-2.5 cursor-pointer font-display tracking-wide"
                   >
                     <MessageCircle className="w-5 h-5 fill-slate-950 text-slate-950" />
-                    <span>Envoyer ce Devis sur WhatsApp ({COMPANY_INFO.whatsappDisplay})</span>
+                    <span>Envoyer ma Demande sur WhatsApp ({COMPANY_INFO.whatsappDisplay})</span>
                   </button>
 
                   <button
@@ -1303,7 +1333,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                     className="w-full py-3 px-4 rounded-xl bg-[#0d1c3a] hover:bg-[#132752] text-white border border-[#C5A869]/25 text-xs font-bold transition-colors flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <CheckCircle2 className="w-4 h-4 text-[#C5A869]" />
-                    <span>Enregistrer la demande en ligne sans WhatsApp</span>
+                    <span>Enregistrer ma demande simulée sans WhatsApp</span>
                   </button>
                 </div>
 

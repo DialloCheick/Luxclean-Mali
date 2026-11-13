@@ -1,4 +1,4 @@
-import { ServiceItem, BeforeAfterItem, TestimonialItem, BamakoDistrict, PaymentMethod, DirtSeverityTier } from '../types';
+import { ServiceItem, BeforeAfterItem, TestimonialItem, BamakoDistrict, PaymentMethod } from '../types';
 import { SITE_IMAGES, getActiveImage } from '../config/siteImages';
 
 export const COMPANY_INFO = {
@@ -286,33 +286,6 @@ export const PAYMENT_METHODS: PaymentMethod[] = [
     color: 'bg-emerald-600 text-white',
     instructions: 'Réglez directement entre les mains de notre chef d’équipe une fois que vous avez constaté et validé la propreté de vos articles.',
     accountName: 'Directement au technicien avec reçu papier signé',
-  },
-];
-
-export const DIRT_SEVERITY_TIERS: DirtSeverityTier[] = [
-  {
-    id: 'leger',
-    label: 'Salissure Légère',
-    shortLabel: 'Léger',
-    multiplier: 1,
-    description: 'Entretien courant, poussière superficielle, pas de taches visibles.',
-    colorClass: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
-  },
-  {
-    id: 'modere',
-    label: 'Salissure Modérée',
-    shortLabel: 'Modéré',
-    multiplier: 1.25,
-    description: 'Taches visibles, poussière de latérite incrustée, usage régulier sans entretien récent.',
-    colorClass: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
-  },
-  {
-    id: 'severe',
-    label: 'Salissure Sévère',
-    shortLabel: 'Sévère',
-    multiplier: 1.5,
-    description: 'Taches anciennes/profondes, odeurs fortes, forte fréquentation ou longue durée sans nettoyage.',
-    colorClass: 'bg-red-500/15 text-red-300 border-red-500/30',
   },
 ];
 

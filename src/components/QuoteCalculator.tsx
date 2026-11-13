@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { BAMAKO_DISTRICTS, PAYMENT_METHODS, COMPANY_INFO } from '../data/mockData';
-import { formatFCFA, generateWhatsAppQuoteLink } from '../utils/whatsapp';
+import { generateWhatsAppQuoteLink } from '../utils/whatsapp';
 import { CompressedImage } from '../utils/image';
 import { QuotePhotoUploader } from './QuotePhotoUploader';
 import {
@@ -121,151 +121,59 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submittedQuoteCode, setSubmittedQuoteCode] = useState('');
 
-  // Calculate pricing breakdown
+  // Build a plain-language summary of what the client selected — no prices
+  // anywhere. The site never computes or shows a quote: it only collects
+  // the client's selections (and photos) to forward to Cheick, who decides
+  // and gives the price himself on WhatsApp.
   const quoteCalculation = useMemo(() => {
-    let subtotal = 0;
-    const itemsList: { name: string; qty: number; total: number }[] = [];
+    const selectionSummaryList: string[] = [];
 
     // Tapis
-    if (tapisSizes.petit > 0) {
-      const price = tapisSizes.petit * 5000;
-      subtotal += price;
-      itemsList.push({ name: 'Petit Tapis (~2x1.5m)', qty: tapisSizes.petit, total: price });
-    }
-    if (tapisSizes.moyen > 0) {
-      const price = tapisSizes.moyen * 9000;
-      subtotal += price;
-      itemsList.push({ name: 'Tapis Moyen (~3x2m)', qty: tapisSizes.moyen, total: price });
-    }
-    if (tapisSizes.grand > 0) {
-      const price = tapisSizes.grand * 15000;
-      subtotal += price;
-      itemsList.push({ name: 'Grand Tapis Salon (~4x3m)', qty: tapisSizes.grand, total: price });
-    }
-    if (tapisM2 > 0) {
-      const price = tapisM2 * 1500;
-      subtotal += price;
-      itemsList.push({ name: `Tapis sur mesure (${tapisM2} m²)`, qty: tapisM2, total: price });
-    }
+    if (tapisSizes.petit > 0) selectionSummaryList.push(`Petit Tapis (~2x1.5m) × ${tapisSizes.petit}`);
+    if (tapisSizes.moyen > 0) selectionSummaryList.push(`Tapis Moyen (~3x2m) × ${tapisSizes.moyen}`);
+    if (tapisSizes.grand > 0) selectionSummaryList.push(`Grand Tapis Salon (~4x3m) × ${tapisSizes.grand}`);
+    if (tapisM2 > 0) selectionSummaryList.push(`Tapis sur mesure : ${tapisM2} m²`);
 
     // Canapés
-    if (sofaItems.fauteuil > 0) {
-      const price = sofaItems.fauteuil * 5000;
-      subtotal += price;
-      itemsList.push({ name: 'Fauteuil 1 place', qty: sofaItems.fauteuil, total: price });
-    }
-    if (sofaItems.places2 > 0) {
-      const price = sofaItems.places2 * 12000;
-      subtotal += price;
-      itemsList.push({ name: 'Canapé 2 places', qty: sofaItems.places2, total: price });
-    }
-    if (sofaItems.places3 > 0) {
-      const price = sofaItems.places3 * 18000;
-      subtotal += price;
-      itemsList.push({ name: 'Canapé 3 places', qty: sofaItems.places3, total: price });
-    }
-    if (sofaItems.salon5 > 0) {
-      const price = sofaItems.salon5 * 28000;
-      subtotal += price;
-      itemsList.push({ name: 'Salon complet 5 places', qty: sofaItems.salon5, total: price });
-    }
-    if (sofaItems.salon7 > 0) {
-      const price = sofaItems.salon7 * 38000;
-      subtotal += price;
-      itemsList.push({ name: 'Salon complet 7 places', qty: sofaItems.salon7, total: price });
-    }
-    if (sofaItems.angle > 0) {
-      const price = sofaItems.angle * 25000;
-      subtotal += price;
-      itemsList.push({ name: 'Canapé d’angle en L', qty: sofaItems.angle, total: price });
-    }
-    if (sofaItems.chaises > 0) {
-      const price = sofaItems.chaises * 2000;
-      subtotal += price;
-      itemsList.push({ name: 'Chaise de salle à manger', qty: sofaItems.chaises, total: price });
-    }
+    if (sofaItems.fauteuil > 0) selectionSummaryList.push(`Fauteuil 1 place × ${sofaItems.fauteuil}`);
+    if (sofaItems.places2 > 0) selectionSummaryList.push(`Canapé 2 places × ${sofaItems.places2}`);
+    if (sofaItems.places3 > 0) selectionSummaryList.push(`Canapé 3 places × ${sofaItems.places3}`);
+    if (sofaItems.salon5 > 0) selectionSummaryList.push(`Salon complet 5 places × ${sofaItems.salon5}`);
+    if (sofaItems.salon7 > 0) selectionSummaryList.push(`Salon complet 7 places × ${sofaItems.salon7}`);
+    if (sofaItems.angle > 0) selectionSummaryList.push(`Canapé d’angle en L × ${sofaItems.angle}`);
+    if (sofaItems.chaises > 0) selectionSummaryList.push(`Chaise de salle à manger × ${sofaItems.chaises}`);
 
-    // Moquette Mosquée
+    // Moquette Mosquée / Bureau (surface only, no €/m² shown anywhere)
     if (activeTab === 'moquette_mosquee' && mosqueeM2 > 0) {
-      // Dégressif : 800 F/m2 si > 200m2, sinon 950 F/m2
-      const unitRate = mosqueeM2 >= 200 ? 800 : 950;
-      const price = mosqueeM2 * unitRate;
-      subtotal += price;
-      itemsList.push({ name: `Moquette Mosquée (${mosqueeM2} m² à ${unitRate} F/m²)`, qty: mosqueeM2, total: price });
+      selectionSummaryList.push(`Moquette Mosquée : ${mosqueeM2} m²`);
     }
-
-    // Moquette Bureau
     if (activeTab === 'moquette_bureau' && bureauM2 > 0) {
-      // 1200 F/m2 ou 1000 F/m2 si > 100m2
-      const unitRate = bureauM2 >= 100 ? 1000 : 1200;
-      const price = bureauM2 * unitRate;
-      subtotal += price;
-      itemsList.push({ name: `Moquette Bureau (${bureauM2} m² à ${unitRate} F/m²)`, qty: bureauM2, total: price });
+      selectionSummaryList.push(`Moquette Bureau : ${bureauM2} m²`);
     }
 
     // Matelas
-    if (matelas1Place > 0) {
-      const price = matelas1Place * 10000;
-      subtotal += price;
-      itemsList.push({ name: 'Matelas 1 place', qty: matelas1Place, total: price });
-    }
-    if (matelas2Places > 0) {
-      const price = matelas2Places * 18000;
-      subtotal += price;
-      itemsList.push({ name: 'Matelas 2 places (King/Queen)', qty: matelas2Places, total: price });
-    }
+    if (matelas1Place > 0) selectionSummaryList.push(`Matelas 1 place × ${matelas1Place}`);
+    if (matelas2Places > 0) selectionSummaryList.push(`Matelas 2 places (King/Queen) × ${matelas2Places}`);
 
     // Auto
-    if (autoSeats > 0) {
-      const price = autoSeats * 15000;
-      subtotal += price;
-      itemsList.push({ name: 'Nettoyage Sièges Véhicule', qty: autoSeats, total: price });
-    }
-    if (autoComplet > 0) {
-      const price = autoComplet * 25000;
-      subtotal += price;
-      itemsList.push({ name: 'Rénovation Intérieure Complète Auto', qty: autoComplet, total: price });
-    }
+    if (autoSeats > 0) selectionSummaryList.push(`Nettoyage Sièges Véhicule × ${autoSeats}`);
+    if (autoComplet > 0) selectionSummaryList.push(`Rénovation Intérieure Complète Auto × ${autoComplet}`);
 
-    // Options calculation
-    let optionsCost = 0;
+    // Options (name only, no price)
     const selectedOptionsList: string[] = [];
-
     if (options.disinfection && activeTab !== 'moquette_mosquee') {
-      optionsCost += 2500;
-      selectedOptionsList.push('Désinfection antibactérienne & anti-acariens (+2 500 F)');
+      selectedOptionsList.push('Désinfection antibactérienne & anti-acariens');
     } else if (activeTab === 'moquette_mosquee') {
-      selectedOptionsList.push('Désinfection & purification certifiée (Inclus d’office)');
+      selectedOptionsList.push('Désinfection & purification certifiée (incluse)');
     }
-
-    if (options.deepStain) {
-      optionsCost += 2000;
-      selectedOptionsList.push('Détachage ciblé intensif haute pression (+2 000 F)');
-    }
-    if (options.luxuryFragrance) {
-      optionsCost += 1500;
-      selectedOptionsList.push('Parfumage délicat & agréable (+1 500 F)');
-    }
-    if (options.expressDrying) {
-      optionsCost += 2000;
-      selectedOptionsList.push('Séchage accéléré ultra-rapide turbo (+2 000 F)');
-    }
-
-    // Delivery to Bamako district: free if subtotal >= 15000 FCFA, else 2000 FCFA
-    let transportCost = 0;
-    if (subtotal > 0 && subtotal < 15000) {
-      transportCost = 2000;
-    }
-
-    const totalEstimate = subtotal + optionsCost + transportCost;
+    if (options.deepStain) selectedOptionsList.push('Détachage ciblé intensif haute pression');
+    if (options.luxuryFragrance) selectedOptionsList.push('Parfumage délicat & agréable');
+    if (options.expressDrying) selectedOptionsList.push('Séchage accéléré ultra-rapide');
 
     return {
-      subtotal,
-      optionsCost,
-      transportCost,
-      totalEstimate,
-      itemsList,
+      selectionSummaryList,
       selectedOptionsList,
+      hasSelection: selectionSummaryList.length > 0,
     };
   }, [
     tapisSizes,
@@ -283,9 +191,9 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
 
   // Handle WhatsApp Link trigger
   const handleWhatsAppQuote = () => {
-    const serviceSummaryText = quoteCalculation.itemsList.length > 0
-      ? quoteCalculation.itemsList.map(i => `• ${i.name} : ${formatFCFA(i.total)}`).join('\n')
-      : '• Devis sur-mesure à préciser';
+    const serviceSummaryText = quoteCalculation.selectionSummaryList.length > 0
+      ? quoteCalculation.selectionSummaryList.map(s => `• ${s}`).join('\n')
+      : '• Demande sur-mesure à préciser';
 
     const link = generateWhatsAppQuoteLink({
       clientName: clientName || undefined,
@@ -297,7 +205,6 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
       preferredTime: preferredTime || undefined,
       serviceSummary: serviceSummaryText,
       optionsSummary: quoteCalculation.selectedOptionsList,
-      totalEstimateFCFA: quoteCalculation.totalEstimate,
       paymentMethod: selectedPayment,
       customNotes: customNotes || undefined,
       photoCount: quotePhotos.length,
@@ -338,13 +245,13 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
         <div className="text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#0d1c3a] text-[#DFC792] border border-[#C5A869]/25 mb-3">
             <Calculator className="w-3.5 h-3.5 text-[#C5A869]" />
-            <span>Simulateur de Devis • Prix Final Confirmé sur WhatsApp</span>
+            <span>Demande de Devis • Réponse Personnalisée sur WhatsApp</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold font-display text-white tracking-tight">
-            Système de Devis en Ligne <span className="text-gold-gradient">Simulé</span>
+            Demandez Votre <span className="text-gold-gradient">Devis Personnalisé</span>
           </h2>
           <p className="mt-3 text-base text-slate-300">
-            Configurez vos besoins et ajoutez vos photos en quelques clics. Ce que vous voyez ici est une <strong className="text-[#DFC792]">estimation simulée</strong>, pas un prix final : notre équipe vous recontacte sur WhatsApp avec le prix définitif après avoir étudié votre demande.
+            Décrivez ce que vous avez à nettoyer et ajoutez quelques photos. <strong className="text-[#DFC792]">Aucun prix n'est affiché sur le site</strong> : notre équipe étudie votre demande et vous recontacte sur WhatsApp avec le prix exact.
           </p>
         </div>
 
@@ -360,15 +267,15 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                 Réf. Demande : {submittedQuoteCode}
               </span>
               <h3 className="text-2xl font-bold font-display text-white mt-3">
-                Votre Demande a bien été Simulée !
+                Votre Demande a bien été Envoyée !
               </h3>
               <p className="text-sm text-slate-300 mt-2">
-                Merci {clientName || 'cher client'}. Ceci n'est pas encore un prix final : notre équipe à Bamako va étudier votre demande pour le quartier{' '}
-                <strong className="text-[#DFC792]">{selectedDistrict}</strong> et vous recontacter sur WhatsApp avec le prix définitif.
+                Merci {clientName || 'cher client'}. Notre équipe à Bamako va étudier votre demande pour le quartier{' '}
+                <strong className="text-[#DFC792]">{selectedDistrict}</strong> et vous recontacter sur WhatsApp avec le prix.
               </p>
             </div>
 
-            {/* Receipt Summary Box */}
+            {/* Request Summary Box — no price anywhere */}
             <div className="p-5 rounded-2xl bg-[#060b17] border border-[#C5A869]/20 text-left space-y-3">
               <div className="flex justify-between items-center text-sm border-b border-slate-800 pb-2">
                 <span className="text-slate-400">Catégorie :</span>
@@ -378,15 +285,9 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                 <span className="text-slate-400">Date souhaitée :</span>
                 <span className="text-white font-medium">{preferredDate || 'Dès que possible'} ({preferredTime})</span>
               </div>
-              <div className="flex justify-between items-center text-sm border-b border-slate-800 pb-2">
+              <div className="flex justify-between items-center text-sm">
                 <span className="text-slate-400">Paiement sélectionné :</span>
                 <span className="text-[#DFC792] font-bold">{selectedPayment}</span>
-              </div>
-              <div className="flex justify-between items-center text-base pt-1">
-                <span className="text-white font-bold">Estimation Simulée (non-finale) :</span>
-                <span className="text-2xl font-black text-[#C5A869] font-display">
-                  {formatFCFA(quoteCalculation.totalEstimate)}
-                </span>
               </div>
             </div>
 
@@ -397,7 +298,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                 Prochaine étape :
               </p>
               <p>
-                Cliquez sur le bouton WhatsApp ci-dessous en gardant la référence <strong>{submittedQuoteCode}</strong>. Nous vous répondrons avec le <strong className="text-[#DFC792]">prix définitif</strong> après avoir vu vos informations{quotePhotos.length > 0 ? ' et vos photos' : ''}.
+                Cliquez sur le bouton WhatsApp ci-dessous en gardant la référence <strong>{submittedQuoteCode}</strong>. Notre équipe étudie votre demande{quotePhotos.length > 0 ? ' et vos photos' : ''} et vous répond avec le <strong className="text-[#DFC792]">prix</strong> directement sur WhatsApp.
               </p>
               {quotePhotos.length > 0 && (
                 <p className="flex items-start gap-1.5 text-amber-200">
@@ -538,7 +439,6 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                     <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-850 border border-slate-800">
                       <div>
                         <span className="font-semibold text-white text-sm block">Petit Tapis (~2 x 1.5 m)</span>
-                        <span className="text-xs text-[#C5A869] font-medium">{formatFCFA(5000)} / unité</span>
                       </div>
                       <div className="flex items-center gap-3">
                         <button
@@ -565,7 +465,6 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                     <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-850 border border-slate-800">
                       <div>
                         <span className="font-semibold text-white text-sm block">Tapis Moyen (~3 x 2 m - Format Salon standard)</span>
-                        <span className="text-xs text-[#C5A869] font-medium">{formatFCFA(9000)} / unité</span>
                       </div>
                       <div className="flex items-center gap-3">
                         <button
@@ -592,7 +491,6 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                     <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-850 border border-slate-800">
                       <div>
                         <span className="font-semibold text-white text-sm block">Grand Tapis Salon Royal (~4 x 3 m)</span>
-                        <span className="text-xs text-[#C5A869] font-medium">{formatFCFA(15000)} / unité</span>
                       </div>
                       <div className="flex items-center gap-3">
                         <button
@@ -619,7 +517,6 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                     <div className="p-3.5 rounded-xl bg-slate-850/60 border border-slate-800 flex items-center justify-between">
                       <div>
                         <span className="font-semibold text-white text-sm block">Ou saisissez la surface exacte en m²</span>
-                        <span className="text-xs text-slate-400">1 500 FCFA / m²</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <input
@@ -655,7 +552,6 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                       <div className="flex items-center justify-between p-3 rounded-xl bg-slate-850 border border-slate-800">
                         <div>
                           <span className="font-semibold text-white text-xs block">Fauteuil (1 place)</span>
-                          <span className="text-[11px] text-[#C5A869] font-medium">{formatFCFA(5000)}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <button
@@ -682,7 +578,6 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                       <div className="flex items-center justify-between p-3 rounded-xl bg-slate-850 border border-slate-800">
                         <div>
                           <span className="font-semibold text-white text-xs block">Canapé 2 places</span>
-                          <span className="text-[11px] text-[#C5A869] font-medium">{formatFCFA(12000)}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <button
@@ -709,7 +604,6 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                       <div className="flex items-center justify-between p-3 rounded-xl bg-slate-850 border border-slate-800">
                         <div>
                           <span className="font-semibold text-white text-xs block">Canapé 3 places</span>
-                          <span className="text-[11px] text-[#C5A869] font-medium">{formatFCFA(18000)}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <button
@@ -736,7 +630,6 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                       <div className="flex items-center justify-between p-3 rounded-xl bg-slate-850 border border-slate-800">
                         <div>
                           <span className="font-semibold text-white text-xs block">Canapé d'Angle en L</span>
-                          <span className="text-[11px] text-[#C5A869] font-medium">{formatFCFA(25000)}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <button
@@ -763,7 +656,6 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                       <div className="flex items-center justify-between p-3 rounded-xl bg-slate-850 border border-slate-800">
                         <div>
                           <span className="font-semibold text-white text-xs block">Salon Complet 5 Places</span>
-                          <span className="text-[11px] text-[#C5A869] font-medium">{formatFCFA(28000)}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <button
@@ -790,7 +682,6 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                       <div className="flex items-center justify-between p-3 rounded-xl bg-slate-850 border border-slate-800">
                         <div>
                           <span className="font-semibold text-white text-xs block">Salon Royal 7 Places</span>
-                          <span className="text-[11px] text-[#C5A869] font-medium">{formatFCFA(38000)}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <button
@@ -850,13 +741,6 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                         <span>250 m² (Mosquée de quartier)</span>
                         <span>800 m² (Grande Mosquée)</span>
                       </div>
-
-                      <div className="p-3 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-300 flex items-center justify-between">
-                        <span>Tarif unitaire appliqué :</span>
-                        <span className="font-bold text-[#DFC792]">
-                          {mosqueeM2 >= 200 ? '800 FCFA / m² (Tarif Grand Espace)' : '950 FCFA / m²'}
-                        </span>
-                      </div>
                     </div>
                   </div>
                 )}
@@ -895,13 +779,6 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                         <span>100 m² (Open Space)</span>
                         <span>500 m² (Siège complet)</span>
                       </div>
-
-                      <div className="p-3 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-300 flex items-center justify-between">
-                        <span>Tarif entreprise :</span>
-                        <span className="font-bold text-[#DFC792]">
-                          {bureauM2 >= 100 ? '1 000 FCFA / m² (Remise grand volume)' : '1 200 FCFA / m²'}
-                        </span>
-                      </div>
                     </div>
                   </div>
                 )}
@@ -920,7 +797,6 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                       <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-850 border border-slate-800">
                         <div>
                           <span className="font-semibold text-white text-sm block">Matelas 1 place (Enfant / Célibataire)</span>
-                          <span className="text-xs text-[#C5A869] font-medium">{formatFCFA(10000)}</span>
                         </div>
                         <div className="flex items-center gap-3">
                           <button
@@ -946,7 +822,6 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                       <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-850 border border-slate-800">
                         <div>
                           <span className="font-semibold text-white text-sm block">Matelas 2 places (Queen / King Size)</span>
-                          <span className="text-xs text-[#C5A869] font-medium">{formatFCFA(18000)}</span>
                         </div>
                         <div className="flex items-center gap-3">
                           <button
@@ -986,7 +861,6 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                       <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-850 border border-slate-800">
                         <div>
                           <span className="font-semibold text-white text-sm block">Shampouinage des Sièges (Avant + Banquette)</span>
-                          <span className="text-xs text-[#C5A869] font-medium">{formatFCFA(15000)}</span>
                         </div>
                         <div className="flex items-center gap-3">
                           <button
@@ -1012,7 +886,6 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                       <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-850 border border-slate-800">
                         <div>
                           <span className="font-semibold text-white text-sm block">Intérieur Complet (Sièges, Moquette sol, Plafonnier & Coffre)</span>
-                          <span className="text-xs text-[#C5A869] font-medium">{formatFCFA(25000)}</span>
                         </div>
                         <div className="flex items-center gap-3">
                           <button
@@ -1053,7 +926,6 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                       />
                       <div className="text-xs">
                         <span className="font-semibold text-white block">Désinfection anti-acariens</span>
-                        <span className="text-slate-400">+2 500 FCFA</span>
                       </div>
                     </label>
 
@@ -1066,7 +938,6 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                       />
                       <div className="text-xs">
                         <span className="font-semibold text-white block">Détachage intensif (café/graisse)</span>
-                        <span className="text-slate-400">+2 000 FCFA</span>
                       </div>
                     </label>
 
@@ -1079,7 +950,6 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                       />
                       <div className="text-xs">
                         <span className="font-semibold text-white block">Parfumage délicat & agréable</span>
-                        <span className="text-slate-400">+1 500 FCFA</span>
                       </div>
                     </label>
 
@@ -1092,7 +962,6 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                       />
                       <div className="text-xs">
                         <span className="font-semibold text-white block">Séchage accéléré soufflerie</span>
-                        <span className="text-slate-400">+2 000 FCFA</span>
                       </div>
                     </label>
                   </div>
@@ -1251,59 +1120,53 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({ initialCategor
                     </div>
                     <div>
                       <h3 className="font-bold font-display text-white text-base leading-tight">LUXCLEAN MALI</h3>
-                      <span className="text-[10px] text-[#DFC792] font-medium">Devis Estimatif Officiel</span>
+                      <span className="text-[10px] text-[#DFC792] font-medium">Demande de Devis</span>
                     </div>
                   </div>
                   <span className="text-[11px] px-2.5 py-1 rounded-full bg-[#C5A869]/15 text-[#C5A869] border border-[#C5A869]/35 font-bold">
-                    Calcul instantané
+                    Sans engagement
                   </span>
                 </div>
 
-                {/* Items breakdown list */}
+                {/* Selection summary — descriptive only, no price anywhere */}
                 <div className="space-y-2.5 max-h-56 overflow-y-auto pr-1 text-xs">
-                  {quoteCalculation.itemsList.length === 0 ? (
+                  {quoteCalculation.selectionSummaryList.length === 0 ? (
                     <p className="text-slate-400 italic py-4 text-center">
-                      Sélectionnez au moins un article (tapis, canapé, moquette ou matelas) pour calculer votre devis.
+                      Sélectionnez au moins un article (tapis, canapé, moquette ou matelas) pour continuer.
                     </p>
                   ) : (
-                    quoteCalculation.itemsList.map((item, idx) => (
-                      <div key={idx} className="flex justify-between items-center text-slate-300 py-1.5 border-b border-slate-800/80">
-                        <span className="truncate max-w-[200px] text-white font-medium">{item.name}</span>
-                        <span className="font-bold text-[#DFC792] shrink-0 ml-2">{formatFCFA(item.total)}</span>
+                    quoteCalculation.selectionSummaryList.map((item, idx) => (
+                      <div key={idx} className="flex items-center text-slate-300 py-1.5 border-b border-slate-800/80">
+                        <span className="truncate text-white font-medium">{item}</span>
                       </div>
                     ))
                   )}
 
                   {/* Options */}
-                  {quoteCalculation.optionsCost > 0 && (
-                    <div className="flex justify-between items-center text-[#DFC792] py-1.5 border-b border-slate-800/80">
-                      <span>Traitements additionnels</span>
-                      <span className="font-bold">+{formatFCFA(quoteCalculation.optionsCost)}</span>
+                  {quoteCalculation.selectedOptionsList.length > 0 && (
+                    <div className="pt-1.5">
+                      <span className="text-slate-400">Options souhaitées :</span>
+                      <ul className="mt-1 space-y-1">
+                        {quoteCalculation.selectedOptionsList.map((opt, idx) => (
+                          <li key={idx} className="text-[#DFC792]">• {opt}</li>
+                        ))}
+                      </ul>
                     </div>
                   )}
 
-                  {/* Transport */}
-                  <div className="flex justify-between items-center text-slate-300 py-1.5">
-                    <span>Déplacement Bamako ({selectedDistrict})</span>
-                    <span className="font-bold text-emerald-400">
-                      {quoteCalculation.transportCost === 0 ? 'OFFERT' : formatFCFA(quoteCalculation.transportCost)}
-                    </span>
+                  <div className="flex items-center text-slate-300 py-1.5">
+                    <span>Quartier : {selectedDistrict}</span>
                   </div>
                 </div>
 
-                {/* Total box */}
-                <div className="p-4 rounded-xl bg-[#060b17] border border-[#C5A869]/25 space-y-2">
-                  <div className="flex justify-between items-baseline">
-                    <span className="text-xs font-bold uppercase tracking-wider text-slate-300">Estimation Simulée</span>
-                    <span className="text-2xl sm:text-3xl font-black text-[#C5A869] font-display">
-                      {formatFCFA(quoteCalculation.totalEstimate)}
-                    </span>
-                  </div>
+                {/* No price box — the whole point of this version */}
+                <div className="p-4 rounded-xl bg-[#060b17] border border-[#C5A869]/25 space-y-1.5">
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#DFC792]">Aucun prix affiché ici</p>
                   <p className="text-[11px] text-slate-300">
-                    Règlement via <strong className="text-[#DFC792]">{selectedPayment}</strong> ou espèces, à confirmer avec notre équipe.
+                    Nous étudions votre demande{quotePhotos.length > 0 ? ' et vos photos' : ''} et vous donnons le prix exact directement sur WhatsApp — pas de première estimation suivie d'un autre chiffre.
                   </p>
-                  <p className="text-[10px] text-slate-500 italic">
-                    Ceci n'est pas un prix final. Le site simule un ordre de grandeur — le prix définitif vous est communiqué par notre équipe sur WhatsApp, après étude de vos informations et de vos photos.
+                  <p className="text-[10px] text-slate-500">
+                    Règlement ensuite via <strong className="text-[#DFC792]">{selectedPayment}</strong> ou espèces, à confirmer avec notre équipe.
                   </p>
                 </div>
 

@@ -10,7 +10,6 @@ export interface WhatsAppQuotePayload {
   category?: string;
   serviceSummary: string;
   optionsSummary?: string[];
-  totalEstimateFCFA: number;
   paymentMethod?: string;
   customNotes?: string;
   photoCount?: number;
@@ -49,10 +48,6 @@ export function generateWhatsAppQuoteLink(payload: WhatsAppQuotePayload): string
     payload.optionsSummary.forEach(opt => lines.push(` • ${opt}`));
   }
 
-  lines.push(``);
-  lines.push(`🧮 *Estimation simulée (non-finale) :* *${payload.totalEstimateFCFA.toLocaleString('fr-FR')} FCFA*`);
-  lines.push(`_(Ceci est une simulation automatique du site, pas un prix final. Merci de me confirmer le prix définitif après avoir vu les photos ci-dessous.)_`);
-
   if (payload.photoCount && payload.photoCount > 0) {
     lines.push(``);
     lines.push(`📸 *${payload.photoCount} photo${payload.photoCount > 1 ? 's' : ''} sélectionnée${payload.photoCount > 1 ? 's' : ''} sur le site* — je vais les joindre juste ici dans cette conversation.`);
@@ -67,7 +62,7 @@ export function generateWhatsAppQuoteLink(payload: WhatsAppQuotePayload): string
   }
 
   lines.push(`--------------------------------------`);
-  lines.push(`Bonjour Lux Clean Mali, voici ma demande. Merci de me confirmer le prix définitif et la disponibilité.`);
+  lines.push(`Bonjour Lux Clean Mali, voici ma demande. Merci de me donner le prix et la disponibilité.`);
 
   const text = encodeURIComponent(lines.join('\n'));
   return `https://wa.me/${phone}?text=${text}`;

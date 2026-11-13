@@ -67,8 +67,8 @@ export const SERVICES_LIST: ServiceItem[] = [
     id: 'moquette_mosquee',
     category: 'moquette_mosquee',
     title: 'Moquettes de Mosquées',
-    shortDesc: 'Purification, désinfection antibactérienne certifiée et parfumage au musc/oud pour les lieux de culte.',
-    fullDesc: 'Un service d’honneur dédié aux comités de gestion des mosquées de Bamako. Nos machines industrielles à double brosse rotative nettoient en profondeur les rangées de prière, éliminent odeurs et germes, avec une formulation désinfectante respectueuse et un parfumage délicat.',
+    shortDesc: 'Purification en profondeur et désinfection antibactérienne certifiée, adaptée aux lieux de culte.',
+    fullDesc: 'Un service d’honneur dédié aux comités de gestion des mosquées de Bamako. Nos machines industrielles à double brosse rotative nettoient en profondeur les rangées de prière, éliminent odeurs et germes, avec une formulation désinfectante respectueuse et hypoallergénique.',
     priceStartingAt: 800,
     unit: 'par m² (tarif dégressif)',
     iconName: 'Moon',
@@ -77,7 +77,7 @@ export const SERVICES_LIST: ServiceItem[] = [
       'Tarif solidaire dégressif pour les mosquées',
       'Désinfection microbiologique certifiée',
       'Intervention rapide entre les prières ou après Isha',
-      'Parfumage traditionnel musc doux et oud',
+      'Produits hypoallergéniques, sans danger pour les fidèles pieds nus',
     ],
     imageUrl: getActiveImage('service_mosquee', SITE_IMAGES.services.moquetteMosquee),
   },
@@ -331,7 +331,7 @@ export const FAQ_ITEMS = [
   },
   {
     q: 'Comment se déroule le nettoyage des moquettes de mosquées ?',
-    a: 'Nous planifions l’intervention en étroite coordination avec l’Imam ou le comité pour ne jamais perturber les heures de prière (généralement après la prière de Isha ou un matin entre Fajr et Dohr). Nous utilisons des brosses adaptées pour préserver l’épaisseur de la moquette et pulvérisons une essence pure de musc/oud appréciée des fidèles.',
+    a: 'Nous planifions l’intervention en étroite coordination avec l’Imam ou le comité pour ne jamais perturber les heures de prière (généralement après la prière de Isha ou un matin entre Fajr et Dohr). Nous utilisons des brosses adaptées pour préserver l’épaisseur de la moquette et des produits hypoallergéniques, sans danger pour les fidèles qui prient pieds nus.',
   },
   {
     q: 'Puis-je payer par Orange Money ou Wave ?',

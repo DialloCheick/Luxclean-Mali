@@ -50,7 +50,7 @@ export const SERVICES_LIST: ServiceItem[] = [
     category: 'tapis',
     title: 'Tapis & Carpettes de Maison',
     shortDesc: 'Nettoyage en profondeur par injection-extraction, élimination de la poussière rouge de latérite et des acariens.',
-    fullDesc: 'Vos tapis marocains, persans, turcs, shaggy ou contemporains retrouvent leur éclat d’origine. Nous appliquons un dépoussiérage vibrant mécanique, un shampoing au pH neutre et une extraction haute aspiration avec séchage express en atelier ou à votre domicile.',
+    fullDesc: 'Vos tapis marocains, persans, turcs, shaggy ou contemporains retrouvent leur éclat d’origine. Nous appliquons un dépoussiérage vibrant mécanique, un shampoing au pH neutre et une extraction haute aspiration avec séchage rapide, directement chez vous.',
     priceStartingAt: 5000,
     unit: 'par tapis (ou 1 500 F/m²)',
     iconName: 'Sparkles',
@@ -59,7 +59,7 @@ export const SERVICES_LIST: ServiceItem[] = [
       'Dépoussiérage haute intensité anti-latérite',
       'Détachage ciblé (café, thé, sauce, graisse)',
       'Shampoing doux au pH neutre, sans danger pour les fibres délicates',
-      'Séchage express en atelier pour un tapis prêt rapidement',
+      'Extraction haute aspiration, séchage rapide directement chez vous',
     ],
     imageUrl: getActiveImage('service_tapis', SITE_IMAGES.services.tapisMaison),
   },
@@ -319,7 +319,7 @@ export const DIRT_SEVERITY_TIERS: DirtSeverityTier[] = [
 export const FAQ_ITEMS = [
   {
     q: 'Combien de temps faut-il pour que le tapis ou canapé soit complètement sec ?',
-    a: 'Grâce à notre technologie d’extraction haute puissance à turbine double flux, 90% de l’eau injectée est réaspirée immédiatement. En général, comptez entre 2 à 4 heures selon la ventilation et la météo à Bamako. Pour les tapis emportés en atelier, ils vous sont restitués 100% secs sous 24h à 48h dans une housse protectrice.',
+    a: 'Grâce à notre technologie d’extraction haute puissance à turbine double flux, 90% de l’eau injectée est réaspirée immédiatement. En général, comptez entre 2 à 4 heures selon la ventilation et la météo à Bamako, directement chez vous.',
   },
   {
     q: 'Vous déplacez-vous partout à Bamako ? Les frais de déplacement sont-ils inclus ?',

@@ -77,7 +77,7 @@ export const SERVICES_LIST: ServiceItem[] = [
       'Tarif solidaire dégressif pour les mosquées',
       'Désinfection microbiologique certifiée',
       'Intervention rapide entre les prières ou après Isha',
-      'Produits hypoallergéniques, sans danger pour les fidèles pieds nus',
+      'Produits hypoallergéniques, sans danger pour les fidèles',
     ],
     imageUrl: getActiveImage('service_mosquee', SITE_IMAGES.services.moquetteMosquee),
   },
@@ -92,7 +92,7 @@ export const SERVICES_LIST: ServiceItem[] = [
     iconName: 'Building2',
     badge: 'B2B & Sièges Sociaux',
     features: [
-      'Facturation B2B avec NIF & reçu conforme',
+      'Un air plus sain pour le bien-être de vos collaborateurs',
       'Planning nocturne ou samedi/dimanche',
       'Séchage ultra-rapide en 3 à 4 heures',
       'Contrats d’entretien périodiques trimestriels',

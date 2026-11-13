@@ -58,8 +58,8 @@ export const SERVICES_LIST: ServiceItem[] = [
     features: [
       'Dépoussiérage haute intensité anti-latérite',
       'Détachage ciblé (café, thé, sauce, graisse)',
-      'Désodorisation et parfumage agréable',
-      'Collecte et livraison à domicile gratuites dès 2 tapis',
+      'Shampoing doux au pH neutre, sans danger pour les fibres délicates',
+      'Séchage express en atelier pour un tapis prêt rapidement',
     ],
     imageUrl: getActiveImage('service_tapis', SITE_IMAGES.services.tapisMaison),
   },
